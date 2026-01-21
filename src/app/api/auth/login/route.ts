@@ -38,10 +38,13 @@ export async function POST(req: NextRequest) {
     }
 
     // Generate JWT token
+    const jwtSecret = process.env.JWT_SECRET || 'default_secret_key';
+    const signOptions: jwt.SignOptions = { expiresIn: '7d' };
+    
     const token = jwt.sign(
       { id: admin.id, email: admin.email },
-      process.env.JWT_SECRET || 'your_jwt_secret_key_change_in_production',
-      { expiresIn: process.env.JWT_EXPIRY || '7d' }
+      jwtSecret,
+      signOptions
     );
 
     return NextResponse.json(
