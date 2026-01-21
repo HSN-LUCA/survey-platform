@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import LanguageSelectionModal from '@/components/LanguageSelectionModal';
-import QRCode from 'qrcode.react';
+import { QRCodeCanvas } from 'qrcode.react';
 
 interface Survey {
   id: string;
@@ -183,7 +183,7 @@ export default function Home() {
 
                   {/* QR Code */}
                   <div className="flex justify-center mb-6 p-4 bg-gray-50 rounded-lg">
-                    <QRCode
+                    <QRCodeCanvas
                       value={getSurveyUrl(survey.id)}
                       size={120}
                       level="H"

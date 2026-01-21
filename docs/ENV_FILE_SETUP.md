@@ -41,9 +41,9 @@ No changes needed! This file is ready to use locally.
 Replace `your-domain.com` with your actual domain:
 
 ```
-API_URL=https://your-domain.com
-NEXT_PUBLIC_API_URL=https://your-domain.com
-NEXT_PUBLIC_APP_URL=https://your-domain.com
+API_URL=https://hidelogs.com/
+NEXT_PUBLIC_API_URL=https://hidelogs.com/
+NEXT_PUBLIC_APP_URL=https://hidelogs.com/
 ```
 
 **Example:**
