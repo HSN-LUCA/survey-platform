@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 interface AdminLayoutProps {
   children: ReactNode;
-  activeTab?: 'surveys' | 'analytics' | 'settings';
+  activeTab?: 'surveys' | 'analytics' | 'respondents' | 'settings';
 }
 
 export default function AdminLayout({ children, activeTab = 'surveys' }: AdminLayoutProps) {
@@ -24,6 +24,7 @@ export default function AdminLayout({ children, activeTab = 'surveys' }: AdminLa
   const navItems = [
     { id: 'analytics', label: t('admin.analytics'), href: '/admin/analytics' },
     { id: 'surveys', label: t('admin.surveys'), href: '/admin/surveys' },
+    { id: 'respondents', label: 'Respondents', href: '/admin/respondents' },
     { id: 'settings', label: t('admin.settings'), href: '/admin/settings' },
   ];
 
@@ -57,6 +58,7 @@ export default function AdminLayout({ children, activeTab = 'surveys' }: AdminLa
               <span className="text-xl">
                 {item.id === 'surveys' && '📋'}
                 {item.id === 'analytics' && '📊'}
+                {item.id === 'respondents' && '👥'}
                 {item.id === 'settings' && '⚙️'}
               </span>
               {sidebarOpen && <span>{item.label}</span>}
@@ -93,6 +95,7 @@ export default function AdminLayout({ children, activeTab = 'surveys' }: AdminLa
           <h2 className="text-2xl font-bold text-gray-800">
             {activeTab === 'surveys' && t('admin.surveys')}
             {activeTab === 'analytics' && t('admin.analytics')}
+            {activeTab === 'respondents' && 'Respondents'}
             {activeTab === 'settings' && t('admin.settings')}
           </h2>
           <div className="flex items-center gap-4">
