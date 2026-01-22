@@ -19,7 +19,8 @@
     "info": "Information",
     "required": "Required",
     "created": "Created",
-    "of": "of"
+    "of": "of",
+    "search": "Search"
   },
   "survey": {
     "title": "Survey",
@@ -95,6 +96,7 @@
     "loginRequired": "Login required",
     "unauthorized": "Unauthorized access",
     "surveys": "Surveys",
+    "respondents": "Respondents",
     "analytics": "Analytics",
     "settings": "Settings",
     "profile": "Profile",
@@ -156,7 +158,26 @@
     "optionArabic": "Option (Arabic)",
     "enterOptionEnglish": "Enter option in English",
     "enterOptionArabic": "Enter option in Arabic",
-    "fillBothFields": "Please fill both fields"
+    "fillBothFields": "Please fill both fields",
+    "respondentsTitle": "Respondents",
+    "respondentsDescription": "View and manage survey respondents",
+    "respondentName": "Name",
+    "respondentEmail": "Email",
+    "respondentPhone": "Phone",
+    "respondentHajjNumber": "Hajj #",
+    "respondentCategory": "Category",
+    "respondentSurvey": "Survey",
+    "respondentDate": "Date",
+    "respondentGender": "Gender",
+    "respondentAgeRange": "Age Range",
+    "respondentEducation": "Education",
+    "respondentNationality": "Nationality",
+    "exportCSV": "📥 Export CSV",
+    "searchPlaceholder": "Email, phone, hajj number, or nationality...",
+    "allSurveys": "All Surveys",
+    "noRespondentsFound": "No respondents found",
+    "showingRespondents": "Showing",
+    "respondentsOf": "of"
   },
   "validation": {
     "required": "This field is required",

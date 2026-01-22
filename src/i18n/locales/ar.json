@@ -19,7 +19,8 @@
     "info": "معلومات",
     "required": "مطلوب",
     "created": "تم الإنشاء",
-    "of": "من"
+    "of": "من",
+    "search": "بحث"
   },
   "survey": {
     "title": "استبيان",
@@ -95,6 +96,7 @@
     "loginRequired": "مطلوب تسجيل الدخول",
     "unauthorized": "وصول غير مصرح به",
     "surveys": "الاستبيانات",
+    "respondents": "المستجيبون",
     "analytics": "التحليلات",
     "settings": "الإعدادات",
     "profile": "الملف الشخصي",
@@ -156,7 +158,26 @@
     "optionArabic": "الخيار (العربية)",
     "enterOptionEnglish": "أدخل الخيار بالإنجليزية",
     "enterOptionArabic": "أدخل الخيار بالعربية",
-    "fillBothFields": "يرجى ملء كلا الحقلين"
+    "fillBothFields": "يرجى ملء كلا الحقلين",
+    "respondentsTitle": "المستجيبون",
+    "respondentsDescription": "عرض وإدارة مستجيبي الاستبيان",
+    "respondentName": "الاسم",
+    "respondentEmail": "البريد الإلكتروني",
+    "respondentPhone": "الهاتف",
+    "respondentHajjNumber": "رقم الحج",
+    "respondentCategory": "الفئة",
+    "respondentSurvey": "الاستبيان",
+    "respondentDate": "التاريخ",
+    "respondentGender": "الجنس",
+    "respondentAgeRange": "نطاق العمر",
+    "respondentEducation": "التعليم",
+    "respondentNationality": "الجنسية",
+    "exportCSV": "📥 تصدير CSV",
+    "searchPlaceholder": "البريد الإلكتروني أو الهاتف أو رقم الحج أو الجنسية...",
+    "allSurveys": "جميع الاستبيانات",
+    "noRespondentsFound": "لم يتم العثور على مستجيبين",
+    "showingRespondents": "عرض",
+    "respondentsOf": "من"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",

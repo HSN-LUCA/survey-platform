@@ -63,7 +63,7 @@ export default function RespondentsPage() {
       setRespondents(data);
     } catch (err) {
       console.error('Error fetching respondents:', err);
-      setError('Unable to load respondents');
+      setError(t('errors.networkError'));
     } finally {
       setLoading(false);
     }
@@ -99,7 +99,17 @@ export default function RespondentsPage() {
   });
 
   const exportToCSV = () => {
-    const headers = ['Email', 'Phone', 'Hajj Number', 'Gender', 'Age Range', 'Education', 'Nationality', 'Survey', 'Date'];
+    const headers = [
+      t('admin.respondentEmail'),
+      t('admin.respondentPhone'),
+      t('admin.respondentHajjNumber'),
+      t('admin.respondentGender'),
+      t('admin.respondentAgeRange'),
+      t('admin.respondentEducation'),
+      t('admin.respondentNationality'),
+      t('admin.respondentSurvey'),
+      t('admin.respondentDate'),
+    ];
     const rows = filteredRespondents.map((r) => [
       r.email,
       r.phone,
@@ -140,14 +150,14 @@ export default function RespondentsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Respondents</h1>
-            <p className="text-gray-600 mt-2">View and manage survey respondents</p>
+            <h1 className="text-3xl font-bold text-gray-800">{t('admin.respondentsTitle')}</h1>
+            <p className="text-gray-600 mt-2">{t('admin.respondentsDescription')}</p>
           </div>
           <button
             onClick={exportToCSV}
             className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
           >
-            📥 Export CSV
+            {t('admin.exportCSV')}
           </button>
         </div>
 
@@ -155,23 +165,27 @@ export default function RespondentsPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('common.search')}
+              </label>
               <input
                 type="text"
-                placeholder="Email, phone, hajj number, or nationality..."
+                placeholder={t('admin.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-yellow-600 text-black"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Survey</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('admin.respondentSurvey')}
+              </label>
               <select
                 value={selectedSurvey}
                 onChange={(e) => setSelectedSurvey(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-yellow-600 text-black"
               >
-                <option value="all">All Surveys</option>
+                <option value="all">{t('admin.allSurveys')}</option>
                 {surveys.map((survey) => (
                   <option key={survey.id} value={survey.id}>
                     {survey.title}
@@ -193,26 +207,34 @@ export default function RespondentsPage() {
         <div className="bg-white rounded-lg shadow overflow-hidden">
           {filteredRespondents.length === 0 ? (
             <div className="p-12 text-center">
-              <p className="text-gray-600">No respondents found</p>
+              <p className="text-gray-600">{t('admin.noRespondentsFound')}</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Email</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Phone</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                      Hajj #
+                      {t('admin.respondentEmail')}
                     </th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                      Gender
+                      {t('admin.respondentPhone')}
                     </th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                      Age Range
+                      {t('admin.respondentHajjNumber')}
                     </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Survey</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                      {t('admin.respondentGender')}
+                    </th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                      {t('admin.respondentAgeRange')}
+                    </th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                      {t('admin.respondentSurvey')}
+                    </th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                      {t('admin.respondentDate')}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -242,8 +264,9 @@ export default function RespondentsPage() {
         {/* Summary */}
         <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg shadow p-6 border-l-4 border-yellow-600">
           <p className="text-gray-700">
-            Showing <span className="font-bold">{filteredRespondents.length}</span> of{' '}
-            <span className="font-bold">{respondents.length}</span> respondents
+            {t('admin.showingRespondents')} <span className="font-bold">{filteredRespondents.length}</span>{' '}
+            {t('admin.respondentsOf')} <span className="font-bold">{respondents.length}</span>{' '}
+            {t('admin.respondents')}
           </p>
         </div>
       </div>
