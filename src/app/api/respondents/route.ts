@@ -3,11 +3,11 @@ import { supabase } from '@/lib/supabase';
 
 export async function GET(req: NextRequest) {
   try {
-    // Fetch respondents - simple query
+    // Fetch respondents with their responses
     const { data, error } = await supabase
       .from('responses')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select('id, survey_id, email, gender, age_range, education_level, nationality, hajj_number, submitted_at')
+      .order('submitted_at', { ascending: false });
 
     if (error) {
       console.error('Supabase error:', error);
@@ -37,12 +37,14 @@ export async function GET(req: NextRequest) {
         id: response.id,
         survey_id: response.survey_id,
         survey_title: survey?.title_en || 'Unknown Survey',
-        full_name: response.full_name || 'N/A',
         email: response.email || 'N/A',
-        phone: response.phone || 'N/A',
+        phone: 'N/A',
         hajj_number: response.hajj_number || 'N/A',
-        category: response.category || 'N/A',
-        created_at: response.created_at,
+        gender: response.gender || 'N/A',
+        age_range: response.age_range || 'N/A',
+        education_level: response.education_level || 'N/A',
+        nationality: response.nationality || 'N/A',
+        submitted_at: response.submitted_at,
       };
     });
 

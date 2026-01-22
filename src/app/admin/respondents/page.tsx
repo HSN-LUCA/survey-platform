@@ -9,12 +9,14 @@ interface Respondent {
   id: string;
   survey_id: string;
   survey_title: string;
-  full_name: string;
   email: string;
   phone: string;
   hajj_number: string;
-  category: string;
-  created_at: string;
+  gender: string;
+  age_range: string;
+  education_level: string;
+  nationality: string;
+  submitted_at: string;
 }
 
 export default function RespondentsPage() {
@@ -51,11 +53,17 @@ export default function RespondentsPage() {
       setLoading(true);
       setError(null);
 
-      // For now, just return empty array - API has issues
-      setRespondents([]);
+      const response = await fetch('/api/respondents');
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch respondents');
+      }
+
+      const data = await response.json();
+      setRespondents(data);
     } catch (err) {
       console.error('Error fetching respondents:', err);
-      setError('Unable to load respondents at this time');
+      setError('Unable to load respondents');
     } finally {
       setLoading(false);
     }
@@ -80,10 +88,10 @@ export default function RespondentsPage() {
 
   const filteredRespondents = respondents.filter((respondent) => {
     const matchesSearch =
-      (respondent.full_name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
       (respondent.email?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
       (respondent.phone || '').includes(searchTerm) ||
-      (respondent.hajj_number || '').includes(searchTerm);
+      (respondent.hajj_number || '').includes(searchTerm) ||
+      (respondent.nationality?.toLowerCase() || '').includes(searchTerm.toLowerCase());
 
     const matchesSurvey = selectedSurvey === 'all' || respondent.survey_id === selectedSurvey;
 
@@ -91,15 +99,17 @@ export default function RespondentsPage() {
   });
 
   const exportToCSV = () => {
-    const headers = ['Name', 'Email', 'Phone', 'Hajj Number', 'Category', 'Survey', 'Date'];
+    const headers = ['Email', 'Phone', 'Hajj Number', 'Gender', 'Age Range', 'Education', 'Nationality', 'Survey', 'Date'];
     const rows = filteredRespondents.map((r) => [
-      r.full_name,
       r.email,
       r.phone,
       r.hajj_number,
-      r.category,
+      r.gender,
+      r.age_range,
+      r.education_level,
+      r.nationality,
       r.survey_title,
-      new Date(r.created_at).toLocaleDateString(),
+      new Date(r.submitted_at).toLocaleDateString(),
     ]);
 
     const csv = [headers, ...rows].map((row) => row.join(',')).join('\n');
@@ -148,7 +158,7 @@ export default function RespondentsPage() {
               <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
               <input
                 type="text"
-                placeholder="Name, email, phone, or hajj number..."
+                placeholder="Email, phone, hajj number, or nationality..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-yellow-600 text-black"
@@ -190,14 +200,16 @@ export default function RespondentsPage() {
               <table className="w-full">
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Email</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Phone</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
                       Hajj #
                     </th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                      Category
+                      Gender
+                    </th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                      Age Range
                     </th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Survey</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
@@ -206,18 +218,18 @@ export default function RespondentsPage() {
                 <tbody className="divide-y divide-gray-200">
                   {filteredRespondents.map((respondent) => (
                     <tr key={respondent.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 text-sm text-gray-900">{respondent.full_name}</td>
-                      <td className="px-6 py-4 text-sm text-gray-600">{respondent.email}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900">{respondent.email}</td>
                       <td className="px-6 py-4 text-sm text-gray-600">{respondent.phone}</td>
                       <td className="px-6 py-4 text-sm text-gray-600">{respondent.hajj_number}</td>
+                      <td className="px-6 py-4 text-sm text-gray-600">{respondent.gender}</td>
                       <td className="px-6 py-4 text-sm">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          {respondent.category}
+                          {respondent.age_range}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-600">{respondent.survey_title}</td>
                       <td className="px-6 py-4 text-sm text-gray-600">
-                        {new Date(respondent.created_at).toLocaleDateString()}
+                        {new Date(respondent.submitted_at).toLocaleDateString()}
                       </td>
                     </tr>
                   ))}
