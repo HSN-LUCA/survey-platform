@@ -1,25 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import jwt from 'jsonwebtoken';
 
 export async function GET(req: NextRequest) {
   try {
-    // Verify JWT token
-    const authHeader = req.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const token = authHeader.substring(7);
-    const jwtSecret = process.env.JWT_SECRET || 'default_secret_key';
-
-    try {
-      jwt.verify(token, jwtSecret);
-    } catch (err) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
-    }
-
-    // Fetch respondents - simplified query without joins
+    // Fetch respondents - simple query
     const { data, error } = await supabase
       .from('responses')
       .select('*')
@@ -34,9 +18,13 @@ export async function GET(req: NextRequest) {
     }
 
     // Fetch surveys separately to get titles
-    const { data: surveys } = await supabase
+    const { data: surveys, error: surveysError } = await supabase
       .from('surveys')
       .select('id, title_en, title_ar');
+
+    if (surveysError) {
+      console.error('Surveys error:', surveysError);
+    }
 
     const surveyMap = new Map(
       (surveys || []).map((s: any) => [s.id, { title_en: s.title_en, title_ar: s.title_ar }])
@@ -62,7 +50,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error('Error fetching respondents:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: String(error) },
       { status: 500 }
     );
   }
