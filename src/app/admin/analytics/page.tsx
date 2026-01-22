@@ -207,10 +207,10 @@ export default function AnalyticsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Age Range Chart */}
               <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-xl font-bold text-gray-800 mb-6">Age Range Distribution</h2>
+                <h2 className="text-xl font-bold text-gray-800 mb-6">{t('admin.ageRangeDistribution')}</h2>
                 {Object.keys(data.demographics.ageRange).length === 0 ? (
                   <div className="text-center py-12">
-                    <p className="text-gray-600">No age range data available</p>
+                    <p className="text-gray-600">{t('admin.noAgeRangeData')}</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -244,10 +244,10 @@ export default function AnalyticsPage() {
 
               {/* Gender Chart */}
               <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-xl font-bold text-gray-800 mb-6">Gender Distribution</h2>
+                <h2 className="text-xl font-bold text-gray-800 mb-6">{t('admin.genderDistribution')}</h2>
                 {Object.keys(data.demographics.gender).length === 0 ? (
                   <div className="text-center py-12">
-                    <p className="text-gray-600">No gender data available</p>
+                    <p className="text-gray-600">{t('admin.noGenderData')}</p>
                   </div>
                 ) : (
                   <div className="space-y-4">

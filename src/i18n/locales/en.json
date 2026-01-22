@@ -177,7 +177,11 @@
     "allSurveys": "All Surveys",
     "noRespondentsFound": "No respondents found",
     "showingRespondents": "Showing",
-    "respondentsOf": "of"
+    "respondentsOf": "of",
+    "ageRangeDistribution": "Age Range Distribution",
+    "genderDistribution": "Gender Distribution",
+    "noAgeRangeData": "No age range data available",
+    "noGenderData": "No gender data available"
   },
   "validation": {
     "required": "This field is required",

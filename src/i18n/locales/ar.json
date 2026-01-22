@@ -177,7 +177,11 @@
     "allSurveys": "جميع الاستبيانات",
     "noRespondentsFound": "لم يتم العثور على مستجيبين",
     "showingRespondents": "عرض",
-    "respondentsOf": "من"
+    "respondentsOf": "من",
+    "ageRangeDistribution": "توزيع نطاق العمر",
+    "genderDistribution": "توزيع الجنس",
+    "noAgeRangeData": "لا توجد بيانات نطاق العمر متاحة",
+    "noGenderData": "لا توجد بيانات الجنس متاحة"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
