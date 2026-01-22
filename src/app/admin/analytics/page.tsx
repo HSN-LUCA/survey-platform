@@ -18,6 +18,10 @@ interface AnalyticsData {
   totalSurveys: number;
   totalResponses: number;
   surveys: SurveyStats[];
+  demographics: {
+    ageRange: Record<string, number>;
+    gender: Record<string, number>;
+  };
 }
 
 export default function AnalyticsPage() {
@@ -199,7 +203,88 @@ export default function AnalyticsPage() {
               </div>
             </div>
 
-            {/* Survey Details */}
+            {/* Demographics Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Age Range Chart */}
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-xl font-bold text-gray-800 mb-6">Age Range Distribution</h2>
+                {Object.keys(data.demographics.ageRange).length === 0 ? (
+                  <div className="text-center py-12">
+                    <p className="text-gray-600">No age range data available</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {Object.entries(data.demographics.ageRange)
+                      .sort(([a], [b]) => a.localeCompare(b))
+                      .map(([ageRange, count]) => {
+                        const percentage =
+                          data.totalResponses > 0
+                            ? Math.round((count / data.totalResponses) * 100)
+                            : 0;
+                        return (
+                          <div key={ageRange}>
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-sm font-medium text-gray-700">{ageRange}</span>
+                              <span className="text-sm font-semibold text-gray-900">
+                                {count} ({percentage}%)
+                              </span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                              <div
+                                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${percentage}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                )}
+              </div>
+
+              {/* Gender Chart */}
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-xl font-bold text-gray-800 mb-6">Gender Distribution</h2>
+                {Object.keys(data.demographics.gender).length === 0 ? (
+                  <div className="text-center py-12">
+                    <p className="text-gray-600">No gender data available</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {Object.entries(data.demographics.gender)
+                      .sort(([a], [b]) => a.localeCompare(b))
+                      .map(([gender, count]) => {
+                        const percentage =
+                          data.totalResponses > 0
+                            ? Math.round((count / data.totalResponses) * 100)
+                            : 0;
+                        const colors: Record<string, string> = {
+                          Male: 'bg-blue-600',
+                          Female: 'bg-pink-600',
+                          Other: 'bg-purple-600',
+                        };
+                        const color = colors[gender] || 'bg-gray-600';
+                        return (
+                          <div key={gender}>
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-sm font-medium text-gray-700">{gender}</span>
+                              <span className="text-sm font-semibold text-gray-900">
+                                {count} ({percentage}%)
+                              </span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                              <div
+                                className={`${color} h-2 rounded-full transition-all duration-300`}
+                                style={{ width: `${percentage}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                )}
+              </div>
+            </div>
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-bold text-gray-800 mb-6">{t('admin.surveyPerformance')}</h2>
 

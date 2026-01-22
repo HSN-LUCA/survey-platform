@@ -83,6 +83,28 @@ export async function GET(req: NextRequest) {
       })
     );
 
+    // Get all responses for demographic analysis
+    const { data: allResponses, error: responsesError } = await supabase
+      .from('responses')
+      .select('age_range, gender');
+
+    if (responsesError) {
+      console.error('Error fetching responses:', responsesError);
+    }
+
+    // Calculate age range distribution
+    const ageRangeStats: Record<string, number> = {};
+    const genderStats: Record<string, number> = {};
+
+    (allResponses || []).forEach((response: any) => {
+      if (response.age_range) {
+        ageRangeStats[response.age_range] = (ageRangeStats[response.age_range] || 0) + 1;
+      }
+      if (response.gender) {
+        genderStats[response.gender] = (genderStats[response.gender] || 0) + 1;
+      }
+    });
+
     // Calculate totals
     const totalResponses = surveyStats.reduce((sum, survey) => sum + survey.response_count, 0);
 
@@ -91,6 +113,10 @@ export async function GET(req: NextRequest) {
         totalSurveys: surveyStats.length,
         totalResponses,
         surveys: surveyStats,
+        demographics: {
+          ageRange: ageRangeStats,
+          gender: genderStats,
+        },
       },
       { status: 200 }
     );
