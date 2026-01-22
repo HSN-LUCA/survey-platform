@@ -95,10 +95,10 @@ export default function RespondentsPage() {
 
   const filteredRespondents = respondents.filter((respondent) => {
     const matchesSearch =
-      respondent.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      respondent.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      respondent.phone.includes(searchTerm) ||
-      respondent.hajj_number.includes(searchTerm);
+      (respondent.full_name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+      (respondent.email?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+      (respondent.phone || '').includes(searchTerm) ||
+      (respondent.hajj_number || '').includes(searchTerm);
 
     const matchesSurvey = selectedSurvey === 'all' || respondent.survey_id === selectedSurvey;
 
