@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Transform data to include survey title
-    const respondents = data.map((response: any) => ({
+    const respondents = (data || []).map((response: any) => ({
       id: response.id,
       survey_id: response.survey_id,
       survey_title: response.surveys?.title_en || 'Unknown Survey',
