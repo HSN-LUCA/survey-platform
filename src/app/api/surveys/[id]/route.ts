@@ -300,6 +300,97 @@ export async function PUT(
           }
         }
       }
+    } else if (hasResponses && questions && questions.length > 0) {
+      // If survey has responses, only allow adding NEW questions (not editing existing ones)
+      // Get existing questions
+      const { data: existingQuestions, error: getQuestionsError } = await supabase
+        .from('questions')
+        .select('id')
+        .eq('survey_id', surveyId);
+
+      if (getQuestionsError) {
+        console.error('Error fetching existing questions:', getQuestionsError);
+      }
+
+      const existingIds = existingQuestions?.map(q => q.id) || [];
+
+      // Only process NEW questions (those not in the database)
+      for (let i = 0; i < questions.length; i++) {
+        const q = questions[i];
+
+        // Check if this is a new question
+        const { data: existingQuestion, error: checkError } = await supabase
+          .from('questions')
+          .select('id')
+          .eq('id', q.id)
+          .single();
+
+        // Skip existing questions - don't allow editing them
+        if (existingQuestion && !checkError) {
+          continue;
+        }
+
+        // Validate question content
+        if (!q.content_en || !q.content_ar) {
+          throw new Error(`Question ${i + 1}: Content in both languages is required`);
+        }
+
+        // Build question object for new question
+        const questionData: any = {
+          survey_id: surveyId,
+          type: q.type,
+          content_en: q.content_en,
+          content_ar: q.content_ar,
+          required: q.required,
+          order_num: i,
+        };
+
+        if (q.category && q.category.trim()) {
+          questionData.category = q.category;
+        }
+
+        // Create new question
+        const { data: newQuestion, error: createQError } = await supabase
+          .from('questions')
+          .insert([questionData])
+          .select()
+          .single();
+
+        if (createQError) {
+          console.error('Question creation error:', createQError);
+          throw new Error(`Failed to create question ${i + 1}: ${createQError.message}`);
+        }
+
+        // Handle options for multiple choice questions
+        if (q.type === 'multiple_choice' && q.options && q.options.length > 0) {
+          const optionsData = q.options.map((opt: any, idx: number) => {
+            if (typeof opt === 'string') {
+              return {
+                question_id: newQuestion.id,
+                text_en: opt,
+                text_ar: opt,
+                order_num: idx,
+              };
+            } else {
+              return {
+                question_id: newQuestion.id,
+                text_en: opt.text_en || '',
+                text_ar: opt.text_ar || '',
+                order_num: idx,
+              };
+            }
+          });
+
+          const { error: createOptError } = await supabase
+            .from('options')
+            .insert(optionsData);
+
+          if (createOptError) {
+            console.error('Options creation error:', createOptError);
+            throw new Error(`Failed to create options for question ${i + 1}: ${createOptError.message}`);
+          }
+        }
+      }
     }
 
     // Fetch and return updated survey

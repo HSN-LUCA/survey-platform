@@ -279,8 +279,8 @@ export default function EditSurveyPage() {
             <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
               <p className="text-yellow-800 text-sm">
                 {isRTL
-                  ? 'ملاحظة: هذا الاستبيان يحتوي على ردود. يمكنك تعديل العنوان والوصف فقط.'
-                  : 'Note: This survey has responses. You can only edit the title and description.'}
+                  ? 'ملاحظة: هذا الاستبيان يحتوي على ردود. يمكنك تعديل العنوان والوصف فقط، لكن يمكنك إضافة أسئلة جديدة.'
+                  : 'Note: This survey has responses. You can only edit the title and description, but you can add new questions.'}
               </p>
             </div>
           )}
