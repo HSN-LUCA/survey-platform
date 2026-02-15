@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { COUNTRIES } from '@/config/countries';
 
 export interface UserDetails {
   email: string;
@@ -28,6 +29,9 @@ export default function UserDetailsForm({ onSubmit, isRTL }: UserDetailsFormProp
     nationality: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showCountrySuggestions, setShowCountrySuggestions] = useState(false);
+  const [filteredCountries, setFilteredCountries] = useState(COUNTRIES);
+  const countryInputRef = useRef<HTMLInputElement>(null);
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -85,7 +89,50 @@ export default function UserDetailsForm({ onSubmit, isRTL }: UserDetailsFormProp
         [name]: '',
       }));
     }
+
+    // Handle country autocomplete
+    if (name === 'nationality') {
+      if (value.length >= 2) {
+        const filtered = COUNTRIES.filter(
+          (country) =>
+            country.name.toLowerCase().includes(value.toLowerCase()) ||
+            country.code.toLowerCase().includes(value.toLowerCase())
+        );
+        setFilteredCountries(filtered);
+        setShowCountrySuggestions(true);
+      } else {
+        setShowCountrySuggestions(false);
+      }
+    }
   };
+
+  const handleCountrySelect = (country: typeof COUNTRIES[0]) => {
+    setFormData((prev) => ({
+      ...prev,
+      nationality: country.name,
+    }));
+    setShowCountrySuggestions(false);
+    if (errors.nationality) {
+      setErrors((prev) => ({
+        ...prev,
+        nationality: '',
+      }));
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        countryInputRef.current &&
+        !countryInputRef.current.contains(event.target as Node)
+      ) {
+        setShowCountrySuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <div className={`min-h-screen bg-gray-100 py-8 px-4 ${isRTL ? 'rtl' : 'ltr'}`}>
@@ -221,24 +268,47 @@ export default function UserDetailsForm({ onSubmit, isRTL }: UserDetailsFormProp
               )}
             </div>
 
-            {/* Nationality */}
-            <div>
+            {/* Nationality with Autocomplete */}
+            <div className="relative">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {t('survey.nationality')}
                 <span className="text-red-500 ml-1">*</span>
               </label>
               <input
+                ref={countryInputRef}
                 type="text"
                 name="nationality"
                 value={formData.nationality}
                 onChange={handleChange}
-                placeholder={t('survey.nationality')}
+                onFocus={() => {
+                  if (formData.nationality.length >= 2) {
+                    setShowCountrySuggestions(true);
+                  }
+                }}
+                placeholder="Type country name or code (e.g., 'Sa' for Saudi Arabia)"
                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 bg-white text-black placeholder-gray-500 ${
                   errors.nationality ? 'border-red-500' : 'border-gray-300'
                 }`}
               />
               {errors.nationality && (
                 <p className="text-red-600 text-sm mt-1">{errors.nationality}</p>
+              )}
+
+              {/* Country Suggestions Dropdown */}
+              {showCountrySuggestions && filteredCountries.length > 0 && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-64 overflow-y-auto">
+                  {filteredCountries.slice(0, 10).map((country) => (
+                    <button
+                      key={country.code}
+                      type="button"
+                      onClick={() => handleCountrySelect(country)}
+                      className="w-full text-left px-4 py-2 hover:bg-yellow-100 transition-colors text-black"
+                    >
+                      <span className="font-semibold">{country.name}</span>
+                      <span className="text-gray-500 ml-2">({country.code})</span>
+                    </button>
+                  ))}
+                </div>
               )}
             </div>
 
