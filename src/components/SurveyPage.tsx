@@ -290,15 +290,6 @@ export default function SurveyPage({ surveyId }: SurveyPageProps) {
             </div>
           )}
 
-          {/* Validation Errors */}
-          {validationErrors.length > 0 && (
-            <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <p className="text-yellow-700 font-medium mb-2">
-                {t('validation.allQuestionsRequired')}
-              </p>
-            </div>
-          )}
-
           {/* Survey Form */}
           <form onSubmit={handleSubmit}>
             <div className="space-y-8">
@@ -403,6 +394,25 @@ export default function SurveyPage({ surveyId }: SurveyPageProps) {
                 </div>
               )}
             </div>
+
+            {/* Validation Alert Above Submit Button */}
+            {validationErrors.length > 0 && (
+              <div className="mt-8 mb-6 p-4 bg-red-50 border-2 border-red-400 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl">⚠️</div>
+                  <div>
+                    <p className="text-red-700 font-bold text-lg mb-2">
+                      {t('validation.allQuestionsRequired')}
+                    </p>
+                    <p className="text-red-600 text-sm">
+                      {isRTL 
+                        ? 'يرجى الإجابة على جميع الأسئلة المطلوبة قبل إرسال الاستبيان'
+                        : 'Please answer all required questions before submitting the survey'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Submit Button */}
             <div className="mt-8">
