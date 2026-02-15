@@ -192,7 +192,7 @@ export default function UserDetailsForm({ onSubmit, isRTL }: UserDetailsFormProp
                   errors.gender ? 'border-red-500' : 'border-gray-300'
                 }`}
               >
-                <option value="">{t('survey.selectOption')}</option>
+                <option value=""></option>
                 <option value="male">{t('survey.male')}</option>
                 <option value="female">{t('survey.female')}</option>
               </select>
@@ -215,7 +215,7 @@ export default function UserDetailsForm({ onSubmit, isRTL }: UserDetailsFormProp
                   errors.ageRange ? 'border-red-500' : 'border-gray-300'
                 }`}
               >
-                <option value="">{t('survey.selectOption')}</option>
+                <option value=""></option>
                 <option value="8-29">{t('survey.age8to29')}</option>
                 <option value="30-39">{t('survey.age30to39')}</option>
                 <option value="40-55">{t('survey.age40to55')}</option>
@@ -241,7 +241,7 @@ export default function UserDetailsForm({ onSubmit, isRTL }: UserDetailsFormProp
                   errors.educationLevel ? 'border-red-500' : 'border-gray-300'
                 }`}
               >
-                <option value="">{t('survey.selectOption')}</option>
+                <option value=""></option>
                 <option value="primary">{t('survey.primary')}</option>
                 <option value="secondary">{t('survey.secondary')}</option>
                 <option value="diploma">{t('survey.diploma')}</option>
@@ -268,7 +268,7 @@ export default function UserDetailsForm({ onSubmit, isRTL }: UserDetailsFormProp
                   errors.nationality ? 'border-red-500' : 'border-gray-300'
                 }`}
               >
-                <option value="">{t('survey.selectOption')}</option>
+                <option value=""></option>
                 {allCountries.map((country) => (
                   <option key={country.code} value={country.name}>
                     {country.name} ({country.code})
