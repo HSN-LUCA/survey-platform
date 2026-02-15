@@ -30,6 +30,7 @@ export default function SurveyPage({ surveyId }: SurveyPageProps) {
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const [categories, setCategories] = useState<string[]>([]);
   const [groupedQuestions, setGroupedQuestions] = useState<Record<string, QuestionWithCategory[]>>({});
+  const [satisfactionScore, setSatisfactionScore] = useState<number>(0);
 
   useEffect(() => {
     fetchSurvey();
@@ -114,6 +115,39 @@ export default function SurveyPage({ surveyId }: SurveyPageProps) {
     return errors.length === 0;
   };
 
+  const calculateSatisfactionScore = (): number => {
+    if (!survey || !survey.questions || survey.questions.length === 0) return 0;
+
+    let totalScore = 0;
+    let scoredQuestions = 0;
+
+    for (const question of survey.questions) {
+      const answer = answers[question.id];
+      if (answer === undefined || answer === null || answer === '') continue;
+
+      if (question.type === 'star_rating') {
+        // Star rating: convert to percentage (1 star = 20%, 5 stars = 100%)
+        const starValue = Number(answer);
+        const maxStars = question.star_config?.star_count || 5;
+        const percentage = (starValue / maxStars) * 100;
+        totalScore += percentage;
+        scoredQuestions++;
+      } else if (question.type === 'percentage_range') {
+        // Percentage range: use directly
+        const percentage = Number(answer);
+        totalScore += percentage;
+        scoredQuestions++;
+      } else if (question.type === 'multiple_choice') {
+        // For multiple choice, we'd need to map options to satisfaction
+        // For now, we'll skip these in satisfaction calculation
+        continue;
+      }
+    }
+
+    if (scoredQuestions === 0) return 0;
+    return Math.round(totalScore / scoredQuestions);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -180,6 +214,7 @@ export default function SurveyPage({ surveyId }: SurveyPageProps) {
 
       console.log('Survey submitted successfully');
       setSubmitted(true);
+      setSatisfactionScore(calculateSatisfactionScore());
       setAnswers({});
     } catch (err) {
       console.error('Error submitting survey:', err);
@@ -219,13 +254,51 @@ export default function SurveyPage({ surveyId }: SurveyPageProps) {
   }
 
   if (submitted) {
+    const getSatisfactionLabel = (score: number) => {
+      if (score >= 80) return t('survey.verySatisfied');
+      if (score >= 60) return t('survey.satisfied');
+      if (score >= 40) return t('survey.neutral');
+      if (score >= 20) return t('survey.dissatisfied');
+      return t('survey.veryDissatisfied');
+    };
+
+    const getSatisfactionColor = (score: number) => {
+      if (score >= 80) return 'text-green-600';
+      if (score >= 60) return 'text-blue-600';
+      if (score >= 40) return 'text-yellow-600';
+      if (score >= 20) return 'text-orange-600';
+      return 'text-red-600';
+    };
+
+    const getSatisfactionBgColor = (score: number) => {
+      if (score >= 80) return 'bg-green-50';
+      if (score >= 60) return 'bg-blue-50';
+      if (score >= 40) return 'bg-yellow-50';
+      if (score >= 20) return 'bg-orange-50';
+      return 'bg-red-50';
+    };
+
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <LanguageSwitcher />
         <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full text-center">
           <div className="text-5xl mb-4">✓</div>
           <h1 className="text-2xl font-bold text-green-600 mb-4">{t('common.success')}</h1>
-          <p className="text-gray-700 mb-6">{t('survey.surveySubmitted')}</p>
+          <p className="text-gray-700 mb-8">{t('survey.thankYou')}</p>
+
+          {/* Satisfaction Score Display */}
+          {satisfactionScore > 0 && (
+            <div className={`${getSatisfactionBgColor(satisfactionScore)} p-6 rounded-lg mb-8 border-2 border-gray-200`}>
+              <p className="text-gray-600 text-sm mb-2">{t('survey.satisfactionScore')}</p>
+              <div className={`text-5xl font-bold ${getSatisfactionColor(satisfactionScore)} mb-2`}>
+                {satisfactionScore}%
+              </div>
+              <p className={`text-lg font-semibold ${getSatisfactionColor(satisfactionScore)}`}>
+                {getSatisfactionLabel(satisfactionScore)}
+              </p>
+            </div>
+          )}
+
           <button
             onClick={() => window.location.reload()}
             className="w-full px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"

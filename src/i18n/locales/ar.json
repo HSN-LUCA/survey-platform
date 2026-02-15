@@ -48,6 +48,14 @@
     "submitSurvey": "إرسال الاستبيان",
     "surveySubmitted": "تم إرسال الاستبيان بنجاح",
     "surveyNotFound": "لم يتم العثور على الاستبيان",
+    "satisfactionScore": "درجة رضاك",
+    "satisfactionPercentage": "مستوى الرضا",
+    "veryDissatisfied": "غير راضٍ جداً",
+    "dissatisfied": "غير راضٍ",
+    "neutral": "محايد",
+    "satisfied": "راضٍ",
+    "verySatisfied": "راضٍ جداً",
+    "thankYou": "شكراً لك على ملاحظاتك!",
     "customerType": "نوع العميل",
     "pilgrims": "الحجاج",
     "staff": "موظفو الشركة",
@@ -120,59 +128,8 @@
     "totalResponses": "إجمالي الردود",
     "responseRate": "معدل الاستجابة",
     "exportResults": "تصدير النتائج",
-    "exportCSV": "تصدير كـ CSV",
-    "exportPDF": "تصدير كـ PDF",
-    "questions": "الأسئلة",
-    "options": "الخيارات",
-    "starRating": "تقييم بالنجوم",
-    "percentageRange": "نطاق النسبة المئوية",
-    "analyticsOverview": "نظرة عامة على التحليلات",
-    "totalSurveys": "إجمالي الاستبيانات",
-    "totalResponsesAnalytics": "إجمالي الردود",
-    "responsePercentage": "معدل الاستجابة",
-    "dateRange": "نطاق التاريخ",
-    "from": "من",
-    "to": "إلى",
-    "selectDateRange": "اختر نطاق التاريخ",
-    "surveyPerformance": "أداء الاستبيان",
-    "responseStatus": "حالة الاستجابة",
-    "excellent": "ممتاز",
-    "good": "جيد",
-    "needsImprovement": "يحتاج إلى تحسين",
-    "noDataAvailable": "لا توجد بيانات متاحة للنطاق الزمني المحدد",
-    "usePresetOptions": "استخدام الخيارات المسبقة",
-    "selectOptionCategory": "-- اختر فئة خيارات --",
-    "agreement": "الموافقة",
-    "yesNo": "نعم/لا",
-    "satisfaction": "الرضا",
-    "likelihood": "الاحتمالية",
-    "quality": "الجودة",
-    "frequency": "التكرار",
-    "importance": "الأهمية",
-    "recommendation": "التوصية",
-    "serviceQuality": "جودة الخدمة",
-    "currentOptions": "الخيارات الحالية",
-    "clearAllOptions": "مسح جميع الخيارات",
-    "addCustomOption": "أو أضف خيار مخصص",
-    "optionEnglish": "الخيار (الإنجليزية)",
-    "optionArabic": "الخيار (العربية)",
-    "enterOptionEnglish": "أدخل الخيار بالإنجليزية",
-    "enterOptionArabic": "أدخل الخيار بالعربية",
-    "fillBothFields": "يرجى ملء كلا الحقلين",
-    "respondentsTitle": "المستجيبون",
-    "respondentsDescription": "عرض وإدارة مستجيبي الاستبيان",
-    "respondentName": "الاسم",
-    "respondentEmail": "البريد الإلكتروني",
-    "respondentPhone": "الهاتف",
-    "respondentHajjNumber": "رقم الحج",
-    "respondentCategory": "الفئة",
-    "respondentSurvey": "الاستبيان",
-    "respondentDate": "التاريخ",
-    "respondentGender": "الجنس",
-    "respondentAgeRange": "نطاق العمر",
-    "respondentEducation": "التعليم",
-    "respondentNationality": "الجنسية",
     "exportCSV": "📥 تصدير CSV",
+    "exportPDF": "تصدير كـ PDF",
     "searchPlaceholder": "البريد الإلكتروني أو الهاتف أو رقم الحج أو الجنسية...",
     "allSurveys": "جميع الاستبيانات",
     "noRespondentsFound": "لم يتم العثور على مستجيبين",
