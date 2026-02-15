@@ -283,14 +283,13 @@ export default function SurveyPage({ surveyId }: SurveyPageProps) {
         <LanguageSwitcher />
         <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full text-center">
           <div className="text-5xl mb-4">✓</div>
-          <h1 className="text-2xl font-bold text-green-600 mb-4">{t('common.success')}</h1>
-          <p className="text-gray-700 mb-8">{t('survey.thankYou')}</p>
+          <h1 className="text-2xl font-bold text-green-600 mb-6">{t('common.success')}</h1>
 
-          {/* Satisfaction Score Display */}
+          {/* Satisfaction Score Display - Shown First */}
           {satisfactionScore > 0 && (
-            <div className={`${getSatisfactionBgColor(satisfactionScore)} p-6 rounded-lg mb-8 border-2 border-gray-200`}>
+            <div className={`${getSatisfactionBgColor(satisfactionScore)} p-6 rounded-lg mb-6 border-2 border-gray-200`}>
               <p className="text-gray-600 text-sm mb-2">{t('survey.satisfactionScore')}</p>
-              <div className={`text-5xl font-bold ${getSatisfactionColor(satisfactionScore)} mb-2`}>
+              <div className={`text-6xl font-bold ${getSatisfactionColor(satisfactionScore)} mb-2`}>
                 {satisfactionScore}%
               </div>
               <p className={`text-lg font-semibold ${getSatisfactionColor(satisfactionScore)}`}>
@@ -298,6 +297,8 @@ export default function SurveyPage({ surveyId }: SurveyPageProps) {
               </p>
             </div>
           )}
+
+          <p className="text-gray-700 mb-8">{t('survey.thankYou')}</p>
 
           <button
             onClick={() => window.location.reload()}
