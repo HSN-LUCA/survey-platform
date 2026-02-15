@@ -19,14 +19,14 @@ interface UserDetailsFormProps {
 }
 
 export default function UserDetailsForm({ onSubmit, isRTL }: UserDetailsFormProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [formData, setFormData] = useState<UserDetails>({
     email: '',
     hajjNumber: '',
     gender: '',
     ageRange: '',
     educationLevel: '',
-    nationality: '',
+    nationality: 'United Arab Emirates', // Default to UAE
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showCountrySuggestions, setShowCountrySuggestions] = useState(false);
@@ -93,11 +93,14 @@ export default function UserDetailsForm({ onSubmit, isRTL }: UserDetailsFormProp
     // Handle country autocomplete
     if (name === 'nationality') {
       if (value.length >= 2) {
-        const filtered = COUNTRIES.filter(
-          (country) =>
-            country.name.toLowerCase().includes(value.toLowerCase()) ||
+        const isArabic = i18n.language === 'ar';
+        const filtered = COUNTRIES.filter((country) => {
+          const searchField = isArabic ? country.ar : country.name;
+          return (
+            searchField.toLowerCase().includes(value.toLowerCase()) ||
             country.code.toLowerCase().includes(value.toLowerCase())
-        );
+          );
+        });
         setFilteredCountries(filtered);
         setShowCountrySuggestions(true);
       } else {
@@ -107,9 +110,11 @@ export default function UserDetailsForm({ onSubmit, isRTL }: UserDetailsFormProp
   };
 
   const handleCountrySelect = (country: typeof COUNTRIES[0]) => {
+    const isArabic = i18n.language === 'ar';
+    const countryName = isArabic ? country.ar : country.name;
     setFormData((prev) => ({
       ...prev,
-      nationality: country.name,
+      nationality: countryName,
     }));
     setShowCountrySuggestions(false);
     if (errors.nationality) {
@@ -285,7 +290,7 @@ export default function UserDetailsForm({ onSubmit, isRTL }: UserDetailsFormProp
                     setShowCountrySuggestions(true);
                   }
                 }}
-                placeholder="Type country name or code (e.g., 'Sa' for Saudi Arabia)"
+                placeholder={isRTL ? "اكتب اسم الدولة أو الرمز" : "Type country name or code"}
                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 bg-white text-black placeholder-gray-500 ${
                   errors.nationality ? 'border-red-500' : 'border-gray-300'
                 }`}
@@ -304,7 +309,9 @@ export default function UserDetailsForm({ onSubmit, isRTL }: UserDetailsFormProp
                       onClick={() => handleCountrySelect(country)}
                       className="w-full text-left px-4 py-2 hover:bg-yellow-100 transition-colors text-black"
                     >
-                      <span className="font-semibold">{country.name}</span>
+                      <span className="font-semibold">
+                        {isRTL ? country.ar : country.name}
+                      </span>
                       <span className="text-gray-500 ml-2">({country.code})</span>
                     </button>
                   ))}
