@@ -2,7 +2,13 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { COUNTRIES } from '@/config/countries';
+
+interface Country {
+  code: string;
+  name: string;
+  name_en: string;
+  name_ar: string;
+}
 
 export interface UserDetails {
   email: string;
@@ -26,12 +32,38 @@ export default function UserDetailsForm({ onSubmit, isRTL }: UserDetailsFormProp
     gender: '',
     ageRange: '',
     educationLevel: '',
-    nationality: 'United Arab Emirates', // Default to UAE
+    nationality: i18n.language === 'ar' ? 'الإمارات العربية المتحدة' : 'United Arab Emirates',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showCountrySuggestions, setShowCountrySuggestions] = useState(false);
-  const [filteredCountries, setFilteredCountries] = useState(COUNTRIES);
+  const [filteredCountries, setFilteredCountries] = useState<Country[]>([]);
+  const [allCountries, setAllCountries] = useState<Country[]>([]);
   const countryInputRef = useRef<HTMLInputElement>(null);
+
+  // Fetch countries on mount and when language changes
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await fetch(`/api/countries?language=${i18n.language}`);
+        if (response.ok) {
+          const data = await response.json();
+          setAllCountries(data);
+        }
+      } catch (error) {
+        console.error('Error fetching countries:', error);
+      }
+    };
+
+    fetchCountries();
+  }, [i18n.language]);
+
+  // Update default nationality when language changes
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      nationality: i18n.language === 'ar' ? 'الإمارات العربية المتحدة' : 'United Arab Emirates',
+    }));
+  }, [i18n.language]);
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -93,14 +125,11 @@ export default function UserDetailsForm({ onSubmit, isRTL }: UserDetailsFormProp
     // Handle country autocomplete
     if (name === 'nationality') {
       if (value.length >= 2) {
-        const isArabic = i18n.language === 'ar';
-        const filtered = COUNTRIES.filter((country) => {
-          const searchField = isArabic ? country.ar : country.name;
-          return (
-            searchField.toLowerCase().includes(value.toLowerCase()) ||
+        const filtered = allCountries.filter(
+          (country) =>
+            country.name.toLowerCase().includes(value.toLowerCase()) ||
             country.code.toLowerCase().includes(value.toLowerCase())
-          );
-        });
+        );
         setFilteredCountries(filtered);
         setShowCountrySuggestions(true);
       } else {
@@ -109,12 +138,10 @@ export default function UserDetailsForm({ onSubmit, isRTL }: UserDetailsFormProp
     }
   };
 
-  const handleCountrySelect = (country: typeof COUNTRIES[0]) => {
-    const isArabic = i18n.language === 'ar';
-    const countryName = isArabic ? country.ar : country.name;
+  const handleCountrySelect = (country: Country) => {
     setFormData((prev) => ({
       ...prev,
-      nationality: countryName,
+      nationality: country.name,
     }));
     setShowCountrySuggestions(false);
     if (errors.nationality) {
@@ -309,9 +336,7 @@ export default function UserDetailsForm({ onSubmit, isRTL }: UserDetailsFormProp
                       onClick={() => handleCountrySelect(country)}
                       className="w-full text-left px-4 py-2 hover:bg-yellow-100 transition-colors text-black"
                     >
-                      <span className="font-semibold">
-                        {isRTL ? country.ar : country.name}
-                      </span>
+                      <span className="font-semibold">{country.name}</span>
                       <span className="text-gray-500 ml-2">({country.code})</span>
                     </button>
                   ))}
