@@ -19,7 +19,7 @@ interface Option {
 
 interface Question {
   id: string;
-  type: 'multiple_choice' | 'star_rating' | 'percentage_range';
+  type: 'multiple_choice' | 'star_rating' | 'percentage_range' | 'text_box';
   content_en: string;
   content_ar: string;
   required: boolean;
@@ -372,6 +372,9 @@ export default function CreateSurveyPage() {
                             </option>
                             <option value="percentage_range">
                               {isRTL ? 'نطاق النسبة المئوية' : 'Percentage Range'}
+                            </option>
+                            <option value="text_box">
+                              {isRTL ? 'ملاحظات (نص حر)' : 'Notes (Free Text)'}
                             </option>
                           </select>
                         </div>

@@ -4,6 +4,7 @@ import { Question } from '@/types';
 import MultipleChoiceQuestion from './questions/MultipleChoiceQuestion';
 import StarRatingQuestion from './questions/StarRatingQuestion';
 import PercentageRangeQuestion from './questions/PercentageRangeQuestion';
+import TextBoxQuestion from './questions/TextBoxQuestion';
 
 interface QuestionRendererProps {
   question: Question;
@@ -42,6 +43,16 @@ export default function QuestionRenderer({
     case 'percentage_range':
       return (
         <PercentageRangeQuestion
+          question={question}
+          value={value}
+          onChange={onChange}
+          isRTL={isRTL}
+        />
+      );
+
+    case 'text_box':
+      return (
+        <TextBoxQuestion
           question={question}
           value={value}
           onChange={onChange}

@@ -19,7 +19,7 @@ interface Option {
 
 interface Question {
   id: string;
-  type: 'multiple_choice' | 'star_rating' | 'percentage_range';
+  type: 'multiple_choice' | 'star_rating' | 'percentage_range' | 'text_box';
   content_en: string;
   content_ar: string;
   required: boolean;

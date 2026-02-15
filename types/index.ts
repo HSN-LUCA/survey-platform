@@ -22,7 +22,7 @@ export interface AdminLoginResponse {
 
 // Survey types
 export type CustomerType = 'pilgrims' | 'staff';
-export type QuestionType = 'multiple_choice' | 'star_rating' | 'percentage_range';
+export type QuestionType = 'multiple_choice' | 'star_rating' | 'percentage_range' | 'text_box';
 
 export interface Survey {
   id: string;
