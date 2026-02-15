@@ -212,8 +212,14 @@ export async function PUT(
 
         let question;
 
-        // If question has an ID and doesn't start with 'temp-', it's an existing question
-        if (q.id && !q.id.startsWith('temp-')) {
+        // Check if this is an existing question by checking if it exists in the database
+        const { data: existingQuestion, error: checkError } = await supabase
+          .from('questions')
+          .select('id')
+          .eq('id', q.id)
+          .single();
+
+        if (existingQuestion && !checkError) {
           // Update existing question
           const { error: updateQError } = await supabase
             .from('questions')
