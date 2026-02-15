@@ -51,6 +51,14 @@ export default function CreateSurveyPage() {
       options: [],
     };
     setQuestions([...questions, newQuestion]);
+    
+    // Scroll to the new question after a short delay to allow DOM to update
+    setTimeout(() => {
+      const newQuestionElement = document.querySelector('[data-question-id="' + newQuestion.id + '"]');
+      if (newQuestionElement) {
+        newQuestionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   };
 
   const updateQuestion = (id: string, updates: Partial<Question>) => {
@@ -296,6 +304,7 @@ export default function CreateSurveyPage() {
                 questions.map((question, index) => (
                   <div
                     key={question.id}
+                    data-question-id={question.id}
                     className="border-2 border-gray-200 rounded-lg p-6 hover:border-yellow-400 transition-colors bg-gray-50"
                   >
                     <div className="flex items-center justify-between mb-6">

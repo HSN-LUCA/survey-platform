@@ -126,6 +126,14 @@ export default function EditSurveyPage() {
       options: [],
     };
     setQuestions([...questions, newQuestion]);
+    
+    // Scroll to the new question after a short delay to allow DOM to update
+    setTimeout(() => {
+      const newQuestionElement = document.querySelector('[data-question-id="' + newQuestion.id + '"]');
+      if (newQuestionElement) {
+        newQuestionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   };
 
   const updateQuestion = (id: string, updates: Partial<Question>) => {
@@ -402,6 +410,7 @@ export default function EditSurveyPage() {
                 questions.map((question, index) => (
                   <div
                     key={question.id}
+                    data-question-id={question.id}
                     className="border-2 border-gray-200 rounded-lg p-6 hover:border-yellow-400 transition-colors bg-gray-50"
                   >
                     <div className="flex items-center justify-between mb-6">
@@ -478,6 +487,9 @@ export default function EditSurveyPage() {
                             </option>
                             <option value="percentage_range">
                               {isRTL ? 'نطاق النسبة المئوية' : 'Percentage Range'}
+                            </option>
+                            <option value="text_box">
+                              {isRTL ? 'ملاحظات (نص حر)' : 'Notes (Free Text)'}
                             </option>
                           </select>
                         </div>
