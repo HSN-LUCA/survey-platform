@@ -31,7 +31,7 @@ CREATE INDEX IF NOT EXISTS idx_surveys_is_archived ON surveys(is_archived);
 CREATE TABLE IF NOT EXISTS questions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   survey_id UUID NOT NULL REFERENCES surveys(id) ON DELETE CASCADE,
-  type VARCHAR(50) NOT NULL CHECK (type IN ('multiple_choice', 'star_rating', 'percentage_range')),
+  type VARCHAR(50) NOT NULL CHECK (type IN ('multiple_choice', 'star_rating', 'percentage_range', 'text_box')),
   content_ar TEXT NOT NULL,
   content_en TEXT NOT NULL,
   required BOOLEAN DEFAULT TRUE,
