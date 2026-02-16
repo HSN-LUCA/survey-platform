@@ -20,7 +20,8 @@
     "required": "Required",
     "created": "Created",
     "of": "of",
-    "search": "Search"
+    "search": "Search",
+    "action": "Action"
   },
   "survey": {
     "title": "Survey",
@@ -140,7 +141,21 @@
     "ageRangeDistribution": "Age Range Distribution",
     "genderDistribution": "Gender Distribution",
     "noAgeRangeData": "No age range data available",
-    "noGenderData": "No gender data available"
+    "noGenderData": "No gender data available",
+    "respondentsTitle": "Respondents",
+    "respondentsDescription": "View and manage survey respondents",
+    "respondentEmail": "Email",
+    "respondentPhone": "Phone",
+    "respondentHajjNumber": "Hajj Number",
+    "respondentGender": "Gender",
+    "respondentAgeRange": "Age Range",
+    "respondentEducation": "Education",
+    "respondentNationality": "Nationality",
+    "respondentSurvey": "Survey",
+    "respondentDate": "Date",
+    "respondents": "Respondents",
+    "deleteRespondent": "Delete",
+    "confirmDeleteRespondent": "Are you sure you want to delete this respondent?"
   },
   "validation": {
     "required": "This field is required",

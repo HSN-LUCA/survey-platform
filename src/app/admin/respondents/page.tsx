@@ -29,6 +29,7 @@ export default function RespondentsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSurvey, setSelectedSurvey] = useState('all');
   const [surveys, setSurveys] = useState<{ id: string; title: string }[]>([]);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const isRTL = i18n.language === 'ar';
 
@@ -97,6 +98,33 @@ export default function RespondentsPage() {
 
     return matchesSearch && matchesSurvey;
   });
+
+  const deleteRespondent = async (respondentId: string) => {
+    if (!window.confirm(t('admin.confirmDeleteRespondent'))) {
+      return;
+    }
+
+    try {
+      setDeletingId(respondentId);
+      const response = await fetch(`/api/respondents/${respondentId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete respondent');
+      }
+
+      setRespondents((prev) => prev.filter((r) => r.id !== respondentId));
+    } catch (err) {
+      console.error('Error deleting respondent:', err);
+      setError(t('errors.serverError'));
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const exportToCSV = () => {
     const headers = [
@@ -234,6 +262,9 @@ export default function RespondentsPage() {
                     </th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
                       {t('admin.respondentDate')}
+                    </th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                      {t('common.action')}
                     </th>
                   </tr>
                 </thead>

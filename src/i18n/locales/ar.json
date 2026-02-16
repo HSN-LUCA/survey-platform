@@ -20,7 +20,8 @@
     "required": "مطلوب",
     "created": "تم الإنشاء",
     "of": "من",
-    "search": "بحث"
+    "search": "بحث",
+    "action": "إجراء"
   },
   "survey": {
     "title": "استبيان",
@@ -140,7 +141,21 @@
     "ageRangeDistribution": "توزيع نطاق العمر",
     "genderDistribution": "توزيع الجنس",
     "noAgeRangeData": "لا توجد بيانات نطاق العمر متاحة",
-    "noGenderData": "لا توجد بيانات الجنس متاحة"
+    "noGenderData": "لا توجد بيانات الجنس متاحة",
+    "respondentsTitle": "المستجيبون",
+    "respondentsDescription": "عرض وإدارة مستجيبي الاستبيان",
+    "respondentEmail": "البريد الإلكتروني",
+    "respondentPhone": "الهاتف",
+    "respondentHajjNumber": "رقم الحج",
+    "respondentGender": "الجنس",
+    "respondentAgeRange": "نطاق العمر",
+    "respondentEducation": "التعليم",
+    "respondentNationality": "الجنسية",
+    "respondentSurvey": "الاستبيان",
+    "respondentDate": "التاريخ",
+    "respondents": "المستجيبون",
+    "deleteRespondent": "حذف",
+    "confirmDeleteRespondent": "هل أنت متأكد من رغبتك في حذف هذا المستجيب؟"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
