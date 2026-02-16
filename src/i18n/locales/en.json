@@ -155,7 +155,9 @@
     "respondentDate": "Date",
     "respondents": "Respondents",
     "deleteRespondent": "Delete",
-    "confirmDeleteRespondent": "Are you sure you want to delete this respondent?"
+    "confirmDeleteRespondent": "Are you sure you want to delete this respondent?",
+    "summaryReport": "Summary Report",
+    "noSatisfactionData": "No satisfaction data available for this question type"
   },
   "validation": {
     "required": "This field is required",

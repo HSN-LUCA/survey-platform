@@ -155,7 +155,9 @@
     "respondentDate": "التاريخ",
     "respondents": "المستجيبون",
     "deleteRespondent": "حذف",
-    "confirmDeleteRespondent": "هل أنت متأكد من رغبتك في حذف هذا المستجيب؟"
+    "confirmDeleteRespondent": "هل أنت متأكد من رغبتك في حذف هذا المستجيب؟",
+    "summaryReport": "تقرير ملخص",
+    "noSatisfactionData": "لا توجد بيانات رضا متاحة لنوع السؤال هذا"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",

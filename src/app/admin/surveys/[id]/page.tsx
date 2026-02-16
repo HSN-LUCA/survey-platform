@@ -56,7 +56,7 @@ export default function SurveyDetailPage() {
   const [responses, setResponses] = useState<Response[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'details' | 'responses'>('details');
+  const [activeTab, setActiveTab] = useState<'details' | 'responses' | 'summary'>('details');
 
   const isRTL = i18n.language === 'ar';
 
@@ -127,6 +127,57 @@ export default function SurveyDetailPage() {
     }
 
     return answer.value;
+  };
+
+  const calculateQuestionSatisfaction = (questionId: string) => {
+    const question = getQuestionById(questionId);
+    if (!question) return { score: 0, label: '', color: '' };
+
+    let totalScore = 0;
+    let count = 0;
+
+    responses.forEach((response) => {
+      const answer = response.answers?.find((a) => a.question_id === questionId);
+      if (!answer) return;
+
+      if (question.type === 'star_rating') {
+        const starValue = Number(answer.value);
+        const maxStars = 5;
+        const percentage = (starValue / maxStars) * 100;
+        totalScore += percentage;
+        count++;
+      } else if (question.type === 'percentage_range') {
+        const percentage = Number(answer.value);
+        totalScore += percentage;
+        count++;
+      }
+    });
+
+    if (count === 0) return { score: 0, label: '', color: '' };
+
+    const avgScore = Math.round(totalScore / count);
+
+    let label = '';
+    let color = '';
+
+    if (avgScore >= 80) {
+      label = t('survey.verySatisfied');
+      color = 'text-green-600';
+    } else if (avgScore >= 60) {
+      label = t('survey.satisfied');
+      color = 'text-blue-600';
+    } else if (avgScore >= 40) {
+      label = t('survey.neutral');
+      color = 'text-yellow-600';
+    } else if (avgScore >= 20) {
+      label = t('survey.dissatisfied');
+      color = 'text-orange-600';
+    } else {
+      label = t('survey.veryDissatisfied');
+      color = 'text-red-600';
+    }
+
+    return { score: avgScore, label, color };
   };
 
   if (loading) {
@@ -238,6 +289,16 @@ export default function SurveyDetailPage() {
             }`}
           >
             {t('admin.questions')}
+          </button>
+          <button
+            onClick={() => setActiveTab('summary')}
+            className={`px-4 py-2 font-medium transition-colors ${
+              activeTab === 'summary'
+                ? 'text-yellow-600 border-b-2 border-yellow-600'
+                : 'text-gray-600 hover:text-gray-800'
+            }`}
+          >
+            {t('admin.summaryReport')}
           </button>
           <button
             onClick={() => setActiveTab('responses')}
