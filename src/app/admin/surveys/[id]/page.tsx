@@ -57,6 +57,8 @@ export default function SurveyDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'details' | 'responses' | 'summary'>('details');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
   const isRTL = i18n.language === 'ar';
 
@@ -69,16 +71,18 @@ export default function SurveyDetailPage() {
       setLoading(true);
       setError(null);
 
-      const token = localStorage.getItem('adminToken');
-      if (!token) {
+      const storedToken = localStorage.getItem('adminToken');
+      if (!storedToken) {
         router.push('/admin/login');
         return;
       }
 
+      setToken(storedToken);
+
       // Fetch survey details
       const surveyResponse = await fetch(`/api/surveys/${surveyId}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${storedToken}`,
         },
       });
 
@@ -97,7 +101,7 @@ export default function SurveyDetailPage() {
       // Fetch responses
       const responsesResponse = await fetch(`/api/responses?survey_id=${surveyId}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${storedToken}`,
         },
       });
 
@@ -115,6 +119,33 @@ export default function SurveyDetailPage() {
 
   const getQuestionById = (questionId: string) => {
     return survey?.questions?.find((q) => q.id === questionId);
+  };
+
+  const deleteResponse = async (responseId: string) => {
+    if (!window.confirm(t('admin.confirmDeleteResponse'))) {
+      return;
+    }
+
+    try {
+      setDeletingId(responseId);
+      const response = await fetch(`/api/responses/${responseId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete response');
+      }
+
+      setResponses((prev) => prev.filter((r) => r.id !== responseId));
+    } catch (err) {
+      console.error('Error deleting response:', err);
+      setError(t('errors.serverError'));
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   const getAnswerText = (answer: Answer) => {
@@ -410,14 +441,23 @@ export default function SurveyDetailPage() {
                       <h3 className="text-lg font-semibold text-gray-800">
                         Response #{index + 1}
                       </h3>
-                      <span className="text-sm text-gray-600">
-                        {new Date(response.submitted_at).toLocaleDateString(
-                          isRTL ? 'ar-SA' : 'en-US'
-                        )}{' '}
-                        {new Date(response.submitted_at).toLocaleTimeString(
-                          isRTL ? 'ar-SA' : 'en-US'
-                        )}
-                      </span>
+                      <div className="flex items-center gap-4">
+                        <span className="text-sm text-gray-600">
+                          {new Date(response.submitted_at).toLocaleDateString(
+                            isRTL ? 'ar-SA' : 'en-US'
+                          )}{' '}
+                          {new Date(response.submitted_at).toLocaleTimeString(
+                            isRTL ? 'ar-SA' : 'en-US'
+                          )}
+                        </span>
+                        <button
+                          onClick={() => deleteResponse(response.id)}
+                          disabled={deletingId === response.id}
+                          className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-xs font-medium"
+                        >
+                          {deletingId === response.id ? t('common.loading') : t('admin.deleteResponse')}
+                        </button>
+                      </div>
                     </div>
 
                     <div className="space-y-4">

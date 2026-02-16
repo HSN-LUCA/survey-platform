@@ -157,7 +157,9 @@
     "deleteRespondent": "حذف",
     "confirmDeleteRespondent": "هل أنت متأكد من رغبتك في حذف هذا المستجيب؟",
     "summaryReport": "تقرير ملخص",
-    "noSatisfactionData": "لا توجد بيانات رضا متاحة لنوع السؤال هذا"
+    "noSatisfactionData": "لا توجد بيانات رضا متاحة لنوع السؤال هذا",
+    "deleteResponse": "حذف",
+    "confirmDeleteResponse": "هل أنت متأكد من رغبتك في حذف هذا الرد؟"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
