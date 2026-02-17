@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import AdminLayout from '@/components/AdminLayout';
+import SummaryReportDashboard from '@/components/SummaryReportDashboard';
 
 interface Question {
   id: string;
@@ -158,57 +159,6 @@ export default function SurveyDetailPage() {
     }
 
     return answer.value;
-  };
-
-  const calculateQuestionSatisfaction = (questionId: string) => {
-    const question = getQuestionById(questionId);
-    if (!question) return { score: 0, label: '', color: '' };
-
-    let totalScore = 0;
-    let count = 0;
-
-    responses.forEach((response) => {
-      const answer = response.answers?.find((a) => a.question_id === questionId);
-      if (!answer) return;
-
-      if (question.type === 'star_rating') {
-        const starValue = Number(answer.value);
-        const maxStars = 5;
-        const percentage = (starValue / maxStars) * 100;
-        totalScore += percentage;
-        count++;
-      } else if (question.type === 'percentage_range') {
-        const percentage = Number(answer.value);
-        totalScore += percentage;
-        count++;
-      }
-    });
-
-    if (count === 0) return { score: 0, label: '', color: '' };
-
-    const avgScore = Math.round(totalScore / count);
-
-    let label = '';
-    let color = '';
-
-    if (avgScore >= 80) {
-      label = t('survey.verySatisfied');
-      color = 'text-green-600';
-    } else if (avgScore >= 60) {
-      label = t('survey.satisfied');
-      color = 'text-blue-600';
-    } else if (avgScore >= 40) {
-      label = t('survey.neutral');
-      color = 'text-yellow-600';
-    } else if (avgScore >= 20) {
-      label = t('survey.dissatisfied');
-      color = 'text-orange-600';
-    } else {
-      label = t('survey.veryDissatisfied');
-      color = 'text-red-600';
-    }
-
-    return { score: avgScore, label, color };
   };
 
   if (loading) {
@@ -415,6 +365,27 @@ export default function SurveyDetailPage() {
               <p className="text-gray-600 text-center py-8">
                 {t('survey.noQuestions')}
               </p>
+            )}
+          </div>
+        )}
+
+        {/* Summary Report Tab */}
+        {activeTab === 'summary' && (
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              {t('admin.summaryReport')}
+            </h2>
+
+            {responses.length === 0 ? (
+              <p className="text-gray-600 text-center py-8">
+                {t('survey.noResponses') || 'No responses yet'}
+              </p>
+            ) : (
+              <SummaryReportDashboard
+                questions={survey.questions || []}
+                responses={responses}
+                isRTL={isRTL}
+              />
             )}
           </div>
         )}
