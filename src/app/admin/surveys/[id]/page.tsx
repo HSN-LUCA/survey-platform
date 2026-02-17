@@ -385,6 +385,7 @@ export default function SurveyDetailPage() {
                 questions={survey.questions || []}
                 responses={responses}
                 isRTL={isRTL}
+                totalResponses={responses.length}
               />
             )}
           </div>

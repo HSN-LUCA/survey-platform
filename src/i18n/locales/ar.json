@@ -159,7 +159,11 @@
     "summaryReport": "تقرير ملخص",
     "noSatisfactionData": "لا توجد بيانات رضا متاحة لنوع السؤال هذا",
     "deleteResponse": "حذف",
-    "confirmDeleteResponse": "هل أنت متأكد من رغبتك في حذف هذا الرد؟"
+    "confirmDeleteResponse": "هل أنت متأكد من رغبتك في حذف هذا الرد؟",
+    "answerRate": "معدل الإجابة",
+    "answered": "تمت الإجابة",
+    "notAnswered": "لم تتم الإجابة",
+    "totalSurveys": "إجمالي الاستبيانات"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",

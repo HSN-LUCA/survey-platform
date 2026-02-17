@@ -22,14 +22,29 @@ interface SummaryReportDashboardProps {
   questions: Question[];
   responses: Response[];
   isRTL: boolean;
+  totalResponses?: number;
 }
 
 export default function SummaryReportDashboard({
   questions,
   responses,
   isRTL,
+  totalResponses,
 }: SummaryReportDashboardProps) {
   const { t } = useTranslation();
+
+  // Calculate answer rate
+  const calculateAnswerRate = () => {
+    if (responses.length === 0) return { answered: 0, notAnswered: 0, percentage: 0 };
+    
+    const answered = responses.length;
+    const notAnswered = (totalResponses || 0) - answered;
+    const percentage = totalResponses ? Math.round((answered / totalResponses) * 100) : 100;
+    
+    return { answered, notAnswered, percentage };
+  };
+
+  const answerRate = calculateAnswerRate();
 
   // Group questions by category
   const groupedQuestions: Record<string, Question[]> = {};
@@ -101,6 +116,68 @@ export default function SummaryReportDashboard({
 
   return (
     <div className="space-y-8">
+      {/* Answer Rate Pie Chart */}
+      <div className="bg-white border border-gray-200 rounded-lg p-6">
+        <h3 className="text-xl font-bold text-gray-800 mb-6">{t('admin.answerRate') || 'Answer Rate'}</h3>
+        
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+          {/* Pie Chart */}
+          <div className="relative w-48 h-48">
+            <svg className="w-full h-full" viewBox="0 0 120 120" style={{ transform: 'rotate(-90deg)' }}>
+              {/* Background circle */}
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" strokeWidth="20" />
+              
+              {/* Answered segment */}
+              {answerRate.answered > 0 && (
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="50"
+                  fill="none"
+                  stroke="#10b981"
+                  strokeWidth="20"
+                  strokeDasharray={`${(answerRate.percentage / 100) * 314} 314`}
+                  strokeLinecap="round"
+                />
+              )}
+            </svg>
+            
+            {/* Center Text */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-3xl font-bold text-green-600">{answerRate.percentage}%</span>
+              <span className="text-xs text-gray-600 mt-1">{t('admin.answered') || 'Answered'}</span>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-4 h-4 bg-green-500 rounded"></div>
+              <div>
+                <p className="text-sm text-gray-600">{t('admin.answered') || 'Answered'}</p>
+                <p className="text-lg font-bold text-gray-800">{answerRate.answered}</p>
+              </div>
+            </div>
+            
+            {answerRate.notAnswered > 0 && (
+              <div className="flex items-center gap-3">
+                <div className="w-4 h-4 bg-gray-300 rounded"></div>
+                <div>
+                  <p className="text-sm text-gray-600">{t('admin.notAnswered') || 'Not Answered'}</p>
+                  <p className="text-lg font-bold text-gray-800">{answerRate.notAnswered}</p>
+                </div>
+              </div>
+            )}
+            
+            <div className="pt-4 border-t border-gray-200">
+              <p className="text-sm text-gray-600">{t('admin.totalSurveys') || 'Total Surveys'}</p>
+              <p className="text-lg font-bold text-gray-800">{totalResponses || responses.length}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Questions by Category */}
       {Object.entries(groupedQuestions).map(([category, categoryQuestions]) => (
         <div key={category} className="border border-gray-200 rounded-lg overflow-hidden">
           {/* Category Header */}
