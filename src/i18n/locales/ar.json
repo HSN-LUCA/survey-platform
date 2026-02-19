@@ -109,8 +109,10 @@
     "surveys": "الاستبيانات",
     "respondents": "المستجيبون",
     "analytics": "التحليلات",
+    "analyticsOverview": "لوحة تحليل البيانات",
     "settings": "الإعدادات",
     "profile": "الملف الشخصي",
+    "questions": "الأسئلة",
     "createNewSurvey": "إنشاء استبيان جديد",
     "editSurvey": "تعديل الاستبيان",
     "surveyTitle": "عنوان الاستبيان",
@@ -153,7 +155,6 @@
     "respondentNationality": "الجنسية",
     "respondentSurvey": "الاستبيان",
     "respondentDate": "التاريخ",
-    "respondents": "المستجيبون",
     "deleteRespondent": "حذف",
     "confirmDeleteRespondent": "هل أنت متأكد من رغبتك في حذف هذا المستجيب؟",
     "summaryReport": "تقرير ملخص",
@@ -167,7 +168,10 @@
     "overallSatisfaction": "رضا الاستبيان الإجمالي",
     "averageSatisfaction": "متوسط الرضا",
     "satisfactionLevel": "مستوى الرضا",
-    "responses": "ردود"
+    "responses": "ردود",
+    "options": "الخيارات",
+    "starRating": "تقييم بالنجوم",
+    "percentageRange": "نطاق النسبة المئوية"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
