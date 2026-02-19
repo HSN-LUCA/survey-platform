@@ -53,67 +53,58 @@ export default function SummaryReportDashboard({
 
   const answerRate = calculateAnswerRate();
 
-  // Calculate overall survey satisfaction (Option 2)
-  // Standard Formula: (Number of Satisfied Responses / Total Valid Responses) × 100
-  // Satisfied = ratings 4 & 5 on 5-point scale, or >= 60% on percentage scale
+  // Calculate overall survey satisfaction (Top 2 Box Method)
+  // Formula: (Count of Satisfied Responses / Total Rating Responses) × 100
+  // Satisfied = ratings 4 & 5 on 5-point scale, or >= 80% on percentage scale
   const calculateOverallSatisfaction = () => {
     if (responses.length === 0) return { score: 0, label: '', color: '', satisfiedCount: 0, totalCount: 0 };
 
-    let satisfiedResponseCount = 0;
-    let totalValidResponses = 0;
+    let satisfiedCount = 0;
+    let totalRatingResponses = 0;
 
-    // Check each response to see if it's satisfied
+    // Count all rating answers across all responses
     responses.forEach((response) => {
-      let responseSatisfactionScore = 0;
-      let responseRatingCount = 0;
-
-      // Calculate satisfaction for this response
       response.answers?.forEach((answer) => {
         const question = questions.find((q) => q.id === answer.question_id);
         if (!question) return;
 
+        // Only count star_rating and percentage_range questions
         if (question.type === 'star_rating') {
           const starValue = Number(answer.value);
-          const percentage = (starValue / 5) * 100;
-          responseSatisfactionScore += percentage;
-          responseRatingCount++;
+          // Satisfied = 4 or 5 stars (top 2 box)
+          if (starValue >= 4) {
+            satisfiedCount++;
+          }
+          totalRatingResponses++;
         } else if (question.type === 'percentage_range') {
           const percentage = Number(answer.value);
-          responseSatisfactionScore += percentage;
-          responseRatingCount++;
+          // Satisfied = >= 80% (equivalent to 4-5 on 5-point scale)
+          if (percentage >= 80) {
+            satisfiedCount++;
+          }
+          totalRatingResponses++;
         }
       });
-
-      // If response has rating questions, calculate average satisfaction
-      if (responseRatingCount > 0) {
-        const avgResponseSatisfaction = responseSatisfactionScore / responseRatingCount;
-        
-        // Satisfied if average >= 60% (equivalent to 3+ on 5-point scale)
-        if (avgResponseSatisfaction >= 60) {
-          satisfiedResponseCount++;
-        }
-        totalValidResponses++;
-      }
     });
 
-    if (totalValidResponses === 0) return { score: 0, label: '', color: '', satisfiedCount: 0, totalCount: 0 };
+    if (totalRatingResponses === 0) return { score: 0, label: '', color: '', satisfiedCount: 0, totalCount: 0 };
 
-    // Calculate overall satisfaction percentage
-    const avgScore = Math.round((satisfiedResponseCount / totalValidResponses) * 100);
+    // Calculate overall satisfaction percentage using Top 2 Box method
+    const overallScore = Math.round((satisfiedCount / totalRatingResponses) * 100);
 
     let label = '';
     let color = '';
 
-    if (avgScore >= 80) {
+    if (overallScore >= 80) {
       label = t('survey.verySatisfied');
       color = 'text-green-600';
-    } else if (avgScore >= 60) {
+    } else if (overallScore >= 60) {
       label = t('survey.satisfied');
       color = 'text-blue-600';
-    } else if (avgScore >= 40) {
+    } else if (overallScore >= 40) {
       label = t('survey.neutral');
       color = 'text-yellow-600';
-    } else if (avgScore >= 20) {
+    } else if (overallScore >= 20) {
       label = t('survey.dissatisfied');
       color = 'text-orange-600';
     } else {
@@ -121,7 +112,7 @@ export default function SummaryReportDashboard({
       color = 'text-red-600';
     }
 
-    return { score: avgScore, label, color, satisfiedCount: satisfiedResponseCount, totalCount: totalValidResponses };
+    return { score: overallScore, label, color, satisfiedCount, totalCount: totalRatingResponses };
   };
 
   const overallSatisfaction = calculateOverallSatisfaction();
