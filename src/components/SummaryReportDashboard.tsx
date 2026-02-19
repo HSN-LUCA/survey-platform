@@ -54,42 +54,36 @@ export default function SummaryReportDashboard({
   const answerRate = calculateAnswerRate();
 
   // Calculate overall survey satisfaction (Option 2)
+  // Formula: Average of all rating answers across all responses
   const calculateOverallSatisfaction = () => {
     if (responses.length === 0) return { score: 0, label: '', color: '' };
 
     let totalScore = 0;
-    let ratingQuestionCount = 0;
+    let totalRatingAnswers = 0;
 
-    // For each response, calculate satisfaction
+    // Iterate through all responses and all their answers
     responses.forEach((response) => {
-      let responseScore = 0;
-      let responseRatingCount = 0;
-
       response.answers?.forEach((answer) => {
         const question = questions.find((q) => q.id === answer.question_id);
         if (!question) return;
 
+        // Only count rating-type questions
         if (question.type === 'star_rating') {
           const starValue = Number(answer.value);
           const percentage = (starValue / 5) * 100;
-          responseScore += percentage;
-          responseRatingCount++;
+          totalScore += percentage;
+          totalRatingAnswers++;
         } else if (question.type === 'percentage_range') {
           const percentage = Number(answer.value);
-          responseScore += percentage;
-          responseRatingCount++;
+          totalScore += percentage;
+          totalRatingAnswers++;
         }
       });
-
-      if (responseRatingCount > 0) {
-        totalScore += responseScore / responseRatingCount;
-        ratingQuestionCount++;
-      }
     });
 
-    if (ratingQuestionCount === 0) return { score: 0, label: '', color: '' };
+    if (totalRatingAnswers === 0) return { score: 0, label: '', color: '' };
 
-    const avgScore = Math.round(totalScore / ratingQuestionCount);
+    const avgScore = Math.round(totalScore / totalRatingAnswers);
 
     let label = '';
     let color = '';
