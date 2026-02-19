@@ -54,36 +54,52 @@ export default function SummaryReportDashboard({
   const answerRate = calculateAnswerRate();
 
   // Calculate overall survey satisfaction (Option 2)
-  // Formula: Average of all rating answers across all responses
+  // Standard Formula: (Number of Satisfied Responses / Total Valid Responses) × 100
+  // Satisfied = ratings 4 & 5 on 5-point scale, or >= 60% on percentage scale
   const calculateOverallSatisfaction = () => {
-    if (responses.length === 0) return { score: 0, label: '', color: '' };
+    if (responses.length === 0) return { score: 0, label: '', color: '', satisfiedCount: 0, totalCount: 0 };
 
-    let totalScore = 0;
-    let totalRatingAnswers = 0;
+    let satisfiedResponseCount = 0;
+    let totalValidResponses = 0;
 
-    // Iterate through all responses and all their answers
+    // Check each response to see if it's satisfied
     responses.forEach((response) => {
+      let responseSatisfactionScore = 0;
+      let responseRatingCount = 0;
+
+      // Calculate satisfaction for this response
       response.answers?.forEach((answer) => {
         const question = questions.find((q) => q.id === answer.question_id);
         if (!question) return;
 
-        // Only count rating-type questions
         if (question.type === 'star_rating') {
           const starValue = Number(answer.value);
           const percentage = (starValue / 5) * 100;
-          totalScore += percentage;
-          totalRatingAnswers++;
+          responseSatisfactionScore += percentage;
+          responseRatingCount++;
         } else if (question.type === 'percentage_range') {
           const percentage = Number(answer.value);
-          totalScore += percentage;
-          totalRatingAnswers++;
+          responseSatisfactionScore += percentage;
+          responseRatingCount++;
         }
       });
+
+      // If response has rating questions, calculate average satisfaction
+      if (responseRatingCount > 0) {
+        const avgResponseSatisfaction = responseSatisfactionScore / responseRatingCount;
+        
+        // Satisfied if average >= 60% (equivalent to 3+ on 5-point scale)
+        if (avgResponseSatisfaction >= 60) {
+          satisfiedResponseCount++;
+        }
+        totalValidResponses++;
+      }
     });
 
-    if (totalRatingAnswers === 0) return { score: 0, label: '', color: '' };
+    if (totalValidResponses === 0) return { score: 0, label: '', color: '', satisfiedCount: 0, totalCount: 0 };
 
-    const avgScore = Math.round(totalScore / totalRatingAnswers);
+    // Calculate overall satisfaction percentage
+    const avgScore = Math.round((satisfiedResponseCount / totalValidResponses) * 100);
 
     let label = '';
     let color = '';
@@ -105,7 +121,7 @@ export default function SummaryReportDashboard({
       color = 'text-red-600';
     }
 
-    return { score: avgScore, label, color };
+    return { score: avgScore, label, color, satisfiedCount: satisfiedResponseCount, totalCount: totalValidResponses };
   };
 
   const overallSatisfaction = calculateOverallSatisfaction();
@@ -298,13 +314,14 @@ export default function SummaryReportDashboard({
           <div className="space-y-6">
             <div className="bg-white rounded-lg p-4 shadow-sm">
               <p className="text-sm text-gray-600 mb-1">{t('admin.totalResponses') || 'Total Responses'}</p>
-              <p className="text-3xl font-bold text-gray-800">{responses.length}</p>
+              <p className="text-3xl font-bold text-gray-800">{overallSatisfaction.totalCount}</p>
             </div>
             
             <div className="bg-white rounded-lg p-4 shadow-sm">
-              <p className="text-sm text-gray-600 mb-1">{t('admin.averageSatisfaction') || 'Average Satisfaction'}</p>
-              <p className={`text-2xl font-bold ${overallSatisfaction.color}`}>
-                {overallSatisfaction.score}%
+              <p className="text-sm text-gray-600 mb-1">{t('admin.satisfiedResponses') || 'Satisfied Responses'}</p>
+              <p className="text-2xl font-bold text-green-600">{overallSatisfaction.satisfiedCount}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                ({Math.round((overallSatisfaction.satisfiedCount / (overallSatisfaction.totalCount || 1)) * 100)}% of responses)
               </p>
             </div>
 

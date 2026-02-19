@@ -167,6 +167,7 @@
     "overallSatisfaction": "Overall Survey Satisfaction",
     "averageSatisfaction": "Average Satisfaction",
     "satisfactionLevel": "Satisfaction Level",
+    "satisfiedResponses": "Satisfied Responses",
     "responses": "responses"
   },
   "validation": {
