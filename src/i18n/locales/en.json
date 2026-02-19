@@ -163,7 +163,10 @@
     "answerRate": "Answer Rate",
     "answered": "Answered",
     "notAnswered": "Not Answered",
-    "totalSurveys": "Total Surveys"
+    "totalSurveys": "Total Surveys",
+    "overallSatisfaction": "Overall Survey Satisfaction",
+    "averageSatisfaction": "Average Satisfaction",
+    "satisfactionLevel": "Satisfaction Level"
   },
   "validation": {
     "required": "This field is required",

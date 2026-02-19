@@ -163,7 +163,10 @@
     "answerRate": "معدل الإجابة",
     "answered": "تمت الإجابة",
     "notAnswered": "لم تتم الإجابة",
-    "totalSurveys": "إجمالي الاستبيانات"
+    "totalSurveys": "إجمالي الاستبيانات",
+    "overallSatisfaction": "رضا الاستبيان الإجمالي",
+    "averageSatisfaction": "متوسط الرضا",
+    "satisfactionLevel": "مستوى الرضا"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
