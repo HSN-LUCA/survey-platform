@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
+import QuestionAnswerDistribution from './QuestionAnswerDistribution';
 
 interface Question {
   id: string;
@@ -8,6 +9,12 @@ interface Question {
   content_en: string;
   content_ar: string;
   category?: string;
+  options?: Array<{
+    id: string;
+    text_en: string;
+    text_ar: string;
+    order_num: number;
+  }>;
 }
 
 interface Response {
@@ -317,98 +324,26 @@ export default function SummaryReportDashboard({
 
       {/* Questions by Category (Option 1) */}
       {Object.entries(groupedQuestions).map(([category, categoryQuestions]) => (
-        <div key={category} className="border border-gray-200 rounded-lg overflow-hidden">
+        <div key={category}>
           {/* Category Header */}
-          <div className="bg-orange-500 text-white px-6 py-3 font-semibold text-center">
+          <div className="bg-orange-500 text-white px-6 py-3 font-semibold text-center rounded-t-lg mb-6">
             {category}
           </div>
 
-          {/* Questions Grid */}
-          <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categoryQuestions.map((question) => {
-              const satisfaction = calculateSatisfaction(question.id);
-              const isRatable =
-                question.type === 'star_rating' || question.type === 'percentage_range';
-
-              if (!isRatable) return null;
-
-              return (
-                <div
-                  key={question.id}
-                  className={`border-2 rounded-lg p-4 ${getSatisfactionBgColor(satisfaction.score)}`}
-                >
-                  {/* Question Title */}
-                  <h3 className="text-sm font-semibold text-gray-800 mb-4 line-clamp-2">
-                    {isRTL ? question.content_ar : question.content_en}
-                  </h3>
-
-                  {/* Satisfaction Gauge */}
-                  <div className="mb-4">
-                    <div className="relative w-32 h-32 mx-auto">
-                      {/* Gauge Arc Background */}
-                      <svg
-                        className="w-full h-full"
-                        viewBox="0 0 120 120"
-                        style={{ transform: 'rotate(-90deg)' }}
-                      >
-                        {/* Background arc */}
-                        <circle
-                          cx="60"
-                          cy="60"
-                          r="50"
-                          fill="none"
-                          stroke="#e5e7eb"
-                          strokeWidth="8"
-                        />
-                        {/* Progress arc */}
-                        <circle
-                          cx="60"
-                          cy="60"
-                          r="50"
-                          fill="none"
-                          stroke={
-                            satisfaction.score >= 80
-                              ? '#16a34a'
-                              : satisfaction.score >= 60
-                                ? '#2563eb'
-                                : satisfaction.score >= 40
-                                  ? '#eab308'
-                                  : satisfaction.score >= 20
-                                    ? '#ea580c'
-                                    : '#dc2626'
-                          }
-                          strokeWidth="8"
-                          strokeDasharray={`${(satisfaction.score / 100) * 314} 314`}
-                          strokeLinecap="round"
-                        />
-                      </svg>
-
-                      {/* Center Text */}
-                      <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className={`text-2xl font-bold ${satisfaction.color}`}>
-                          {satisfaction.score}%
-                        </span>
-                        <span className="text-xs text-gray-600 text-center mt-1">
-                          {satisfaction.label}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Response Count */}
-                  <div className="text-center">
-                    <p className="text-xs text-gray-600 mb-1">{t('admin.totalResponses')}</p>
-                    <p className="text-lg font-bold text-gray-800">
-                      {
-                        responses.filter((r) =>
-                          r.answers?.some((a) => a.question_id === question.id)
-                        ).length
-                      }
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
+          {/* Answer Distribution for each question */}
+          <div className="space-y-6">
+            {categoryQuestions.map((question) => (
+              <QuestionAnswerDistribution
+                key={question.id}
+                questionId={question.id}
+                questionType={question.type}
+                questionContent_en={question.content_en}
+                questionContent_ar={question.content_ar}
+                responses={responses}
+                options={question.options}
+                isRTL={isRTL}
+              />
+            ))}
           </div>
         </div>
       ))}

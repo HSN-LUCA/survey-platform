@@ -166,7 +166,8 @@
     "totalSurveys": "Total Surveys",
     "overallSatisfaction": "Overall Survey Satisfaction",
     "averageSatisfaction": "Average Satisfaction",
-    "satisfactionLevel": "Satisfaction Level"
+    "satisfactionLevel": "Satisfaction Level",
+    "responses": "responses"
   },
   "validation": {
     "required": "This field is required",

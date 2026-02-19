@@ -166,7 +166,8 @@
     "totalSurveys": "إجمالي الاستبيانات",
     "overallSatisfaction": "رضا الاستبيان الإجمالي",
     "averageSatisfaction": "متوسط الرضا",
-    "satisfactionLevel": "مستوى الرضا"
+    "satisfactionLevel": "مستوى الرضا",
+    "responses": "ردود"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
