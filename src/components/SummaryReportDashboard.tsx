@@ -268,14 +268,14 @@ export default function SummaryReportDashboard({
                 {t('admin.satisfactionDistribution') || 'Satisfaction Distribution'}
               </h4>
               
-              <div className="space-y-6">
+              <div className="space-y-5">
                 {/* Very Satisfied (5 stars / 100%) */}
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-medium text-gray-700 w-32">
                       {t('survey.verySatisfied') || 'Very Satisfied'} (5)
                     </span>
-                    <span className="text-sm font-bold text-gray-800">
+                    <span className="text-sm font-bold text-gray-800 w-12 text-right">
                       {Math.round(
                         (responses.reduce((count, response) => {
                           return count + (response.answers?.filter(a => {
@@ -286,9 +286,9 @@ export default function SummaryReportDashboard({
                       )}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray-200 rounded-lg h-8">
                     <div
-                      className="bg-green-500 h-2 rounded-full"
+                      className="bg-green-500 h-8 rounded-lg transition-all duration-300"
                       style={{
                         width: `${Math.round(
                           (responses.reduce((count, response) => {
@@ -305,11 +305,11 @@ export default function SummaryReportDashboard({
 
                 {/* Satisfied (4 stars / 80-99%) */}
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-medium text-gray-700 w-32">
                       {t('survey.satisfied') || 'Satisfied'} (4)
                     </span>
-                    <span className="text-sm font-bold text-gray-800">
+                    <span className="text-sm font-bold text-gray-800 w-12 text-right">
                       {Math.round(
                         (responses.reduce((count, response) => {
                           return count + (response.answers?.filter(a => {
@@ -320,9 +320,9 @@ export default function SummaryReportDashboard({
                       )}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray-200 rounded-lg h-8">
                     <div
-                      className="bg-blue-500 h-2 rounded-full"
+                      className="bg-blue-500 h-8 rounded-lg transition-all duration-300"
                       style={{
                         width: `${Math.round(
                           (responses.reduce((count, response) => {
@@ -339,11 +339,11 @@ export default function SummaryReportDashboard({
 
                 {/* Neutral (3 stars / 60-79%) */}
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-medium text-gray-700 w-32">
                       {t('survey.neutral') || 'Neutral'} (3)
                     </span>
-                    <span className="text-sm font-bold text-gray-800">
+                    <span className="text-sm font-bold text-gray-800 w-12 text-right">
                       {Math.round(
                         (responses.reduce((count, response) => {
                           return count + (response.answers?.filter(a => {
@@ -354,9 +354,9 @@ export default function SummaryReportDashboard({
                       )}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray-200 rounded-lg h-8">
                     <div
-                      className="bg-yellow-500 h-2 rounded-full"
+                      className="bg-yellow-500 h-8 rounded-lg transition-all duration-300"
                       style={{
                         width: `${Math.round(
                           (responses.reduce((count, response) => {
@@ -373,11 +373,11 @@ export default function SummaryReportDashboard({
 
                 {/* Dissatisfied (2 stars / 40-59%) */}
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-medium text-gray-700 w-32">
                       {t('survey.dissatisfied') || 'Dissatisfied'} (2)
                     </span>
-                    <span className="text-sm font-bold text-gray-800">
+                    <span className="text-sm font-bold text-gray-800 w-12 text-right">
                       {Math.round(
                         (responses.reduce((count, response) => {
                           return count + (response.answers?.filter(a => {
@@ -388,9 +388,9 @@ export default function SummaryReportDashboard({
                       )}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray-200 rounded-lg h-8">
                     <div
-                      className="bg-orange-500 h-2 rounded-full"
+                      className="bg-orange-500 h-8 rounded-lg transition-all duration-300"
                       style={{
                         width: `${Math.round(
                           (responses.reduce((count, response) => {
@@ -407,11 +407,11 @@ export default function SummaryReportDashboard({
 
                 {/* Very Dissatisfied (1 star / 0-39%) */}
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-medium text-gray-700 w-32">
                       {t('survey.veryDissatisfied') || 'Very Dissatisfied'} (1)
                     </span>
-                    <span className="text-sm font-bold text-gray-800">
+                    <span className="text-sm font-bold text-gray-800 w-12 text-right">
                       {Math.round(
                         (responses.reduce((count, response) => {
                           return count + (response.answers?.filter(a => {
@@ -422,9 +422,9 @@ export default function SummaryReportDashboard({
                       )}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray-200 rounded-lg h-8">
                     <div
-                      className="bg-red-500 h-2 rounded-full"
+                      className="bg-red-500 h-8 rounded-lg transition-all duration-300"
                       style={{
                         width: `${Math.round(
                           (responses.reduce((count, response) => {
