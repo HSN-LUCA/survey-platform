@@ -172,7 +172,8 @@
     "responses": "ردود",
     "options": "الخيارات",
     "starRating": "تقييم بالنجوم",
-    "percentageRange": "نطاق النسبة المئوية"
+    "percentageRange": "نطاق النسبة المئوية",
+    "satisfactionDistribution": "توزيع الرضا"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",

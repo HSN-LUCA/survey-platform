@@ -168,7 +168,8 @@
     "averageSatisfaction": "Average Satisfaction",
     "satisfactionLevel": "Satisfaction Level",
     "satisfiedResponses": "Satisfied Responses",
-    "responses": "responses"
+    "responses": "responses",
+    "satisfactionDistribution": "Satisfaction Distribution"
   },
   "validation": {
     "required": "This field is required",

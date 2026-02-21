@@ -192,9 +192,9 @@ export default function SummaryReportDashboard({
         </div>
       </div>
 
-      {/* Overall Survey Satisfaction (Option 2) */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-8">
-        <h3 className="text-2xl font-bold text-gray-800 mb-8 text-center">
+      {/* Overall Survey Satisfaction - Google Forms Style */}
+      <div className="bg-white border border-gray-200 rounded-lg p-8">
+        <h3 className="text-2xl font-bold text-gray-800 mb-8">
           {t('admin.overallSatisfaction') || 'Overall Survey Satisfaction'}
         </h3>
         
@@ -205,73 +205,239 @@ export default function SummaryReportDashboard({
             </p>
           </div>
         ) : (
-          <div className="flex flex-col md:flex-row items-center justify-center gap-12">
-            {/* Large Gauge */}
-            <div className="relative w-64 h-64">
-              <svg className="w-full h-full" viewBox="0 0 120 120" style={{ transform: 'rotate(-90deg)' }}>
-                {/* Background arc */}
-                <circle
-                  cx="60"
-                  cy="60"
-                  r="50"
-                  fill="none"
-                  stroke="#e5e7eb"
-                  strokeWidth="8"
-                />
-                {/* Progress arc */}
-                {overallSatisfaction.score > 0 && (
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="50"
-                    fill="none"
-                    stroke={
-                      overallSatisfaction.score >= 80
-                        ? '#16a34a'
-                        : overallSatisfaction.score >= 60
-                          ? '#2563eb'
-                          : overallSatisfaction.score >= 40
-                            ? '#eab308'
-                            : overallSatisfaction.score >= 20
-                              ? '#ea580c'
-                              : '#dc2626'
-                    }
-                    strokeWidth="8"
-                    strokeDasharray={`${(overallSatisfaction.score / 100) * 314} 314`}
-                    strokeLinecap="round"
-                  />
-                )}
-              </svg>
+          <div className="space-y-8">
+            {/* Main Score Display */}
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              {/* Large Score Circle */}
+              <div className="flex-shrink-0">
+                <div className="relative w-48 h-48">
+                  <svg className="w-full h-full" viewBox="0 0 120 120" style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" strokeWidth="8" />
+                    {overallSatisfaction.score > 0 && (
+                      <circle
+                        cx="60"
+                        cy="60"
+                        r="50"
+                        fill="none"
+                        stroke={
+                          overallSatisfaction.score >= 80
+                            ? '#16a34a'
+                            : overallSatisfaction.score >= 60
+                              ? '#2563eb'
+                              : overallSatisfaction.score >= 40
+                                ? '#eab308'
+                                : overallSatisfaction.score >= 20
+                                  ? '#ea580c'
+                                  : '#dc2626'
+                        }
+                        strokeWidth="8"
+                        strokeDasharray={`${(overallSatisfaction.score / 100) * 314} 314`}
+                        strokeLinecap="round"
+                      />
+                    )}
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className={`text-5xl font-bold ${overallSatisfaction.color}`}>
+                      {overallSatisfaction.score}%
+                    </span>
+                    <span className="text-xs text-gray-600 mt-1">satisfied</span>
+                  </div>
+                </div>
+              </div>
 
-              {/* Center Text */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className={`text-5xl font-bold ${overallSatisfaction.color}`}>
-                  {overallSatisfaction.score}%
-                </span>
-                <span className="text-sm text-gray-600 text-center mt-2 max-w-24">
-                  {overallSatisfaction.label}
-                </span>
+              {/* Stats Cards */}
+              <div className="flex-1 space-y-4">
+                <div className="bg-gradient-to-r from-green-50 to-green-100 border border-green-200 rounded-lg p-4">
+                  <p className="text-sm text-gray-600 mb-1">{t('admin.satisfiedResponses') || 'Satisfied Responses'}</p>
+                  <p className="text-3xl font-bold text-green-600">{overallSatisfaction.satisfiedCount}</p>
+                  <p className="text-xs text-gray-600 mt-1">
+                    {t('admin.totalResponses') || 'Total Responses'}: {overallSatisfaction.totalCount}
+                  </p>
+                </div>
+
+                <div className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4">
+                  <p className="text-sm text-gray-600 mb-1">{t('admin.satisfactionLevel') || 'Satisfaction Level'}</p>
+                  <p className="text-2xl font-bold text-blue-600">{overallSatisfaction.label}</p>
+                </div>
               </div>
             </div>
 
-            {/* Stats */}
-            <div className="space-y-6">
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <p className="text-sm text-gray-600 mb-1">{t('admin.totalResponses') || 'Total Responses'}</p>
-                <p className="text-3xl font-bold text-gray-800">{overallSatisfaction.totalCount}</p>
-              </div>
+            {/* Satisfaction Distribution Bar - Google Forms Style */}
+            <div className="mt-8 pt-8 border-t border-gray-200">
+              <h4 className="text-lg font-semibold text-gray-800 mb-6">
+                {t('admin.satisfactionDistribution') || 'Satisfaction Distribution'}
+              </h4>
               
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <p className="text-sm text-gray-600 mb-1">{t('admin.satisfiedResponses') || 'Satisfied Responses'}</p>
-                <p className="text-2xl font-bold text-green-600">{overallSatisfaction.satisfiedCount}</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  ({Math.round((overallSatisfaction.satisfiedCount / (overallSatisfaction.totalCount || 1)) * 100)}% of responses)
-                </p>
-              </div>
+              <div className="space-y-6">
+                {/* Very Satisfied (5 stars / 100%) */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">
+                      {t('survey.verySatisfied') || 'Very Satisfied'} (5)
+                    </span>
+                    <span className="text-sm font-bold text-gray-800">
+                      {Math.round(
+                        (responses.reduce((count, response) => {
+                          return count + (response.answers?.filter(a => {
+                            const q = questions.find(q => q.id === a.question_id);
+                            return q?.type === 'star_rating' && Number(a.value) === 5;
+                          }).length || 0);
+                        }, 0) / overallSatisfaction.totalCount) * 100
+                      )}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-green-500 h-2 rounded-full"
+                      style={{
+                        width: `${Math.round(
+                          (responses.reduce((count, response) => {
+                            return count + (response.answers?.filter(a => {
+                              const q = questions.find(q => q.id === a.question_id);
+                              return q?.type === 'star_rating' && Number(a.value) === 5;
+                            }).length || 0);
+                          }, 0) / overallSatisfaction.totalCount) * 100
+                        )}%`,
+                      }}
+                    ></div>
+                  </div>
+                </div>
 
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <p className="text-sm text-gray-600 mb-1">{t('admin.satisfactionLevel') || 'Satisfaction Level'}</p>
-                <p className="text-lg font-semibold text-gray-800">{overallSatisfaction.label}</p>
+                {/* Satisfied (4 stars / 80-99%) */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">
+                      {t('survey.satisfied') || 'Satisfied'} (4)
+                    </span>
+                    <span className="text-sm font-bold text-gray-800">
+                      {Math.round(
+                        (responses.reduce((count, response) => {
+                          return count + (response.answers?.filter(a => {
+                            const q = questions.find(q => q.id === a.question_id);
+                            return q?.type === 'star_rating' && Number(a.value) === 4;
+                          }).length || 0);
+                        }, 0) / overallSatisfaction.totalCount) * 100
+                      )}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-blue-500 h-2 rounded-full"
+                      style={{
+                        width: `${Math.round(
+                          (responses.reduce((count, response) => {
+                            return count + (response.answers?.filter(a => {
+                              const q = questions.find(q => q.id === a.question_id);
+                              return q?.type === 'star_rating' && Number(a.value) === 4;
+                            }).length || 0);
+                          }, 0) / overallSatisfaction.totalCount) * 100
+                        )}%`,
+                      }}
+                    ></div>
+                  </div>
+                </div>
+
+                {/* Neutral (3 stars / 60-79%) */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">
+                      {t('survey.neutral') || 'Neutral'} (3)
+                    </span>
+                    <span className="text-sm font-bold text-gray-800">
+                      {Math.round(
+                        (responses.reduce((count, response) => {
+                          return count + (response.answers?.filter(a => {
+                            const q = questions.find(q => q.id === a.question_id);
+                            return q?.type === 'star_rating' && Number(a.value) === 3;
+                          }).length || 0);
+                        }, 0) / overallSatisfaction.totalCount) * 100
+                      )}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-yellow-500 h-2 rounded-full"
+                      style={{
+                        width: `${Math.round(
+                          (responses.reduce((count, response) => {
+                            return count + (response.answers?.filter(a => {
+                              const q = questions.find(q => q.id === a.question_id);
+                              return q?.type === 'star_rating' && Number(a.value) === 3;
+                            }).length || 0);
+                          }, 0) / overallSatisfaction.totalCount) * 100
+                        )}%`,
+                      }}
+                    ></div>
+                  </div>
+                </div>
+
+                {/* Dissatisfied (2 stars / 40-59%) */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">
+                      {t('survey.dissatisfied') || 'Dissatisfied'} (2)
+                    </span>
+                    <span className="text-sm font-bold text-gray-800">
+                      {Math.round(
+                        (responses.reduce((count, response) => {
+                          return count + (response.answers?.filter(a => {
+                            const q = questions.find(q => q.id === a.question_id);
+                            return q?.type === 'star_rating' && Number(a.value) === 2;
+                          }).length || 0);
+                        }, 0) / overallSatisfaction.totalCount) * 100
+                      )}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-orange-500 h-2 rounded-full"
+                      style={{
+                        width: `${Math.round(
+                          (responses.reduce((count, response) => {
+                            return count + (response.answers?.filter(a => {
+                              const q = questions.find(q => q.id === a.question_id);
+                              return q?.type === 'star_rating' && Number(a.value) === 2;
+                            }).length || 0);
+                          }, 0) / overallSatisfaction.totalCount) * 100
+                        )}%`,
+                      }}
+                    ></div>
+                  </div>
+                </div>
+
+                {/* Very Dissatisfied (1 star / 0-39%) */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">
+                      {t('survey.veryDissatisfied') || 'Very Dissatisfied'} (1)
+                    </span>
+                    <span className="text-sm font-bold text-gray-800">
+                      {Math.round(
+                        (responses.reduce((count, response) => {
+                          return count + (response.answers?.filter(a => {
+                            const q = questions.find(q => q.id === a.question_id);
+                            return q?.type === 'star_rating' && Number(a.value) === 1;
+                          }).length || 0);
+                        }, 0) / overallSatisfaction.totalCount) * 100
+                      )}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-red-500 h-2 rounded-full"
+                      style={{
+                        width: `${Math.round(
+                          (responses.reduce((count, response) => {
+                            return count + (response.answers?.filter(a => {
+                              const q = questions.find(q => q.id === a.question_id);
+                              return q?.type === 'star_rating' && Number(a.value) === 1;
+                            }).length || 0);
+                          }, 0) / overallSatisfaction.totalCount) * 100
+                        )}%`,
+                      }}
+                    ></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
