@@ -121,12 +121,11 @@ export default function AnalyticsPage() {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-gray-800">{t('admin.analyticsOverview')}</h1>
-          <p className="text-gray-600 mt-2">{t('admin.surveyPerformance')}</p>
         </div>
 
         {/* Date Range Filter */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('admin.dateRange')}</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('admin.dateRangeLabel')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
