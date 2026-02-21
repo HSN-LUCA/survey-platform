@@ -210,10 +210,10 @@ export default function SurveyList() {
                   {t('admin.totalResponses')}
                 </th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                  {t('common.language')}
+                  {t('common.date')}
                 </th>
                 <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">
-                  {t('common.language')}
+                  {t('common.options')}
                 </th>
               </tr>
             </thead>

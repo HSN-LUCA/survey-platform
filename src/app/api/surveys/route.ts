@@ -49,7 +49,24 @@ export async function GET(req: NextRequest) {
       throw error;
     }
 
-    return NextResponse.json(surveys, { status: 200 });
+    // Get response counts for each survey
+    const surveysWithCounts = await Promise.all(
+      surveys.map(async (survey) => {
+        const { count, error: countError } = await supabase
+          .from('responses')
+          .select('*', { count: 'exact', head: true })
+          .eq('survey_id', survey.id);
+
+        if (countError) {
+          console.error(`Error counting responses for survey ${survey.id}:`, countError);
+          return { ...survey, response_count: 0 };
+        }
+
+        return { ...survey, response_count: count || 0 };
+      })
+    );
+
+    return NextResponse.json(surveysWithCounts, { status: 200 });
   } catch (error) {
     console.error('Get surveys error:', error);
     return NextResponse.json(

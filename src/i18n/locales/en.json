@@ -21,7 +21,9 @@
     "created": "Created",
     "of": "of",
     "search": "Search",
-    "action": "Action"
+    "action": "Action",
+    "date": "Date",
+    "options": "Options"
   },
   "survey": {
     "title": "Survey",
