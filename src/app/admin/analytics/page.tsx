@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AdminLayout from '@/components/AdminLayout';
 import { useTranslation } from 'react-i18next';
-import CircularProgress from '@/components/CircularProgress';
 
 interface SurveyStats {
   id: string;
@@ -160,48 +159,48 @@ export default function AnalyticsPage() {
         )}
 
         {/* Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Total Surveys Card */}
+          <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg shadow p-6 border-l-4 border-yellow-600">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600 text-sm font-medium">{t('admin.totalSurveys')}</p>
+                <p className="text-3xl font-bold text-gray-800 mt-2">{data?.totalSurveys || 0}</p>
+              </div>
+              <div className="text-4xl text-yellow-600 opacity-20">📊</div>
+            </div>
+          </div>
+
+          {/* Total Responses Card */}
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow p-6 border-l-4 border-blue-600">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600 text-sm font-medium">{t('admin.totalResponses')}</p>
+                <p className="text-3xl font-bold text-gray-800 mt-2">{data?.totalResponses || 0}</p>
+              </div>
+              <div className="text-4xl text-blue-600 opacity-20">📝</div>
+            </div>
+          </div>
+
+          {/* Overall Response Rate Card */}
+          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow p-6 border-l-4 border-green-600">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600 text-sm font-medium">{t('admin.responseRate')}</p>
+                <p className="text-3xl font-bold text-gray-800 mt-2">
+                  {data && data.totalSurveys > 0
+                    ? Math.round((data.totalResponses / (data.totalSurveys * 10)) * 100)
+                    : 0}
+                  %
+                </p>
+              </div>
+              <div className="text-4xl text-green-600 opacity-20">✓</div>
+            </div>
+          </div>
+        </div>
+
         {data && (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Total Surveys Card */}
-              <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg shadow p-6 border-l-4 border-yellow-600">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-600 text-sm font-medium">{t('admin.totalSurveys')}</p>
-                    <p className="text-3xl font-bold text-gray-800 mt-2">{data.totalSurveys}</p>
-                  </div>
-                  <div className="text-4xl text-yellow-600 opacity-20">📊</div>
-                </div>
-              </div>
-
-              {/* Total Responses Card */}
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow p-6 border-l-4 border-blue-600">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-600 text-sm font-medium">{t('admin.totalResponses')}</p>
-                    <p className="text-3xl font-bold text-gray-800 mt-2">{data.totalResponses}</p>
-                  </div>
-                  <div className="text-4xl text-blue-600 opacity-20">📝</div>
-                </div>
-              </div>
-
-              {/* Overall Response Rate Card */}
-              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow p-6 border-l-4 border-green-600">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-600 text-sm font-medium">{t('admin.responseRate')}</p>
-                    <p className="text-3xl font-bold text-gray-800 mt-2">
-                      {data.totalSurveys > 0
-                        ? Math.round((data.totalResponses / (data.totalSurveys * 10)) * 100)
-                        : 0}
-                      %
-                    </p>
-                  </div>
-                  <div className="text-4xl text-green-600 opacity-20">✓</div>
-                </div>
-              </div>
-            </div>
-
             {/* Demographics Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Age Range Chart */}
