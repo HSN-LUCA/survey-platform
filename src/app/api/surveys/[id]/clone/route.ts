@@ -33,6 +33,7 @@ export async function POST(
       .single();
 
     if (surveyError || !originalSurvey) {
+      console.error('Survey fetch error:', surveyError);
       return Response.json({ error: 'Survey not found' }, { status: 404 });
     }
 
@@ -43,6 +44,7 @@ export async function POST(
       .eq('survey_id', surveyId);
 
     if (questionsError) {
+      console.error('Questions fetch error:', questionsError);
       return Response.json({ error: 'Failed to fetch questions' }, { status: 500 });
     }
 
@@ -63,20 +65,29 @@ export async function POST(
       .single();
 
     if (createSurveyError || !newSurvey) {
+      console.error('Survey creation error:', createSurveyError);
       return Response.json({ error: 'Failed to create survey' }, { status: 500 });
     }
 
     // Clone all questions
     if (questions && questions.length > 0) {
-      const newQuestions = questions.map((question) => ({
-        survey_id: newSurvey.id,
-        type: question.type,
-        content_en: question.content_en,
-        content_ar: question.content_ar,
-        required: question.required,
-        order_num: question.order_num,
-        category: question.category,
-      }));
+      const newQuestions = questions.map((question) => {
+        const questionData: any = {
+          survey_id: newSurvey.id,
+          type: question.type,
+          content_en: question.content_en,
+          content_ar: question.content_ar,
+          required: question.required,
+          order_num: question.order_num,
+        };
+        
+        // Only include category if it exists
+        if (question.category) {
+          questionData.category = question.category;
+        }
+        
+        return questionData;
+      });
 
       const { data: createdQuestions, error: createQuestionsError } = await supabase
         .from('questions')
@@ -84,28 +95,40 @@ export async function POST(
         .select();
 
       if (createQuestionsError) {
+        console.error('Questions creation error:', createQuestionsError);
         return Response.json({ error: 'Failed to clone questions' }, { status: 500 });
       }
 
       // Clone options for multiple choice questions
-      for (let i = 0; i < questions.length; i++) {
-        if (questions[i].type === 'multiple_choice') {
-          const { data: options, error: optionsError } = await supabase
-            .from('question_options')
-            .select('*')
-            .eq('question_id', questions[i].id);
+      if (createdQuestions) {
+        for (let i = 0; i < questions.length; i++) {
+          if (questions[i].type === 'multiple_choice') {
+            const { data: options, error: optionsError } = await supabase
+              .from('question_options')
+              .select('*')
+              .eq('question_id', questions[i].id);
 
-          if (optionsError || !options) continue;
+            if (optionsError) {
+              console.error('Options fetch error:', optionsError);
+              continue;
+            }
 
-          if (options.length > 0) {
-            const newOptions = options.map((option) => ({
-              question_id: createdQuestions[i].id,
-              text_en: option.text_en,
-              text_ar: option.text_ar,
-              order_num: option.order_num,
-            }));
+            if (options && options.length > 0) {
+              const newOptions = options.map((option) => ({
+                question_id: createdQuestions[i].id,
+                text_en: option.text_en,
+                text_ar: option.text_ar,
+                order_num: option.order_num,
+              }));
 
-            await supabase.from('question_options').insert(newOptions);
+              const { error: optionsInsertError } = await supabase
+                .from('question_options')
+                .insert(newOptions);
+
+              if (optionsInsertError) {
+                console.error('Options insert error:', optionsInsertError);
+              }
+            }
           }
         }
       }
@@ -114,6 +137,6 @@ export async function POST(
     return Response.json(newSurvey, { status: 201 });
   } catch (error) {
     console.error('Error cloning survey:', error);
-    return Response.json({ error: 'Internal server error' }, { status: 500 });
+    return Response.json({ error: 'Internal server error', details: String(error) }, { status: 500 });
   }
 }

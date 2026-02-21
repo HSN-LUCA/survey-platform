@@ -173,7 +173,9 @@ export default function SurveyDetailPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to clone survey');
+        const errorData = await response.json();
+        console.error('Clone error response:', errorData);
+        throw new Error(errorData.error || 'Failed to clone survey');
       }
 
       const clonedSurvey = await response.json();
@@ -181,7 +183,7 @@ export default function SurveyDetailPage() {
       router.push(`/admin/surveys/${clonedSurvey.id}`);
     } catch (err) {
       console.error('Error cloning survey:', err);
-      alert(t('errors.serverError'));
+      alert(`${t('errors.serverError')}: ${err instanceof Error ? err.message : 'Unknown error'}`);
     } finally {
       setCloning(false);
     }
