@@ -189,7 +189,7 @@ export default function AnalyticsPage() {
               <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow p-6 border-l-4 border-green-600">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-gray-600 text-sm font-medium">{t('admin.responsePercentage')}</p>
+                    <p className="text-gray-600 text-sm font-medium">{t('admin.responseRate')}</p>
                     <p className="text-3xl font-bold text-gray-800 mt-2">
                       {data.totalSurveys > 0
                         ? Math.round((data.totalResponses / (data.totalSurveys * 10)) * 100)
