@@ -55,6 +55,7 @@ export async function POST(
       description_en: originalSurvey.description_en,
       description_ar: originalSurvey.description_ar,
       customer_type: originalSurvey.customer_type,
+      created_by: decoded.id,
       created_at: new Date().toISOString(),
     };
 
@@ -71,23 +72,18 @@ export async function POST(
 
     // Clone all questions
     if (questions && questions.length > 0) {
-      const newQuestions = questions.map((question) => {
-        const questionData: any = {
-          survey_id: newSurvey.id,
-          type: question.type,
-          content_en: question.content_en,
-          content_ar: question.content_ar,
-          required: question.required,
-          order_num: question.order_num,
-        };
-        
-        // Only include category if it exists
-        if (question.category) {
-          questionData.category = question.category;
-        }
-        
-        return questionData;
-      });
+      const newQuestions = questions.map((question) => ({
+        survey_id: newSurvey.id,
+        type: question.type,
+        content_en: question.content_en,
+        content_ar: question.content_ar,
+        required: question.required,
+        order_num: question.order_num,
+        star_count: question.star_count,
+        percentage_min: question.percentage_min,
+        percentage_max: question.percentage_max,
+        percentage_step: question.percentage_step,
+      }));
 
       const { data: createdQuestions, error: createQuestionsError } = await supabase
         .from('questions')
@@ -104,7 +100,7 @@ export async function POST(
         for (let i = 0; i < questions.length; i++) {
           if (questions[i].type === 'multiple_choice') {
             const { data: options, error: optionsError } = await supabase
-              .from('question_options')
+              .from('options')
               .select('*')
               .eq('question_id', questions[i].id);
 
@@ -122,7 +118,7 @@ export async function POST(
               }));
 
               const { error: optionsInsertError } = await supabase
-                .from('question_options')
+                .from('options')
                 .insert(newOptions);
 
               if (optionsInsertError) {
