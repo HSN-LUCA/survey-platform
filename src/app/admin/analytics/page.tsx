@@ -223,16 +223,20 @@ export default function AnalyticsPage() {
                         return (
                           <div key={ageRange}>
                             <div className="flex items-center justify-between mb-2">
-                              <span className="text-sm font-medium text-gray-700">{ageRange}</span>
-                              <span className="text-sm font-semibold text-gray-900">
-                                {count} ({percentage}%)
+                              <span className="text-sm font-medium text-gray-700 w-24">{ageRange}</span>
+                              <div className="flex-1 mx-4">
+                                <div className="w-full bg-gray-200 rounded-full h-8">
+                                  <div
+                                    className="bg-blue-600 h-8 rounded-full transition-all duration-300 flex items-center justify-end pr-3"
+                                    style={{ width: `${Math.max(percentage, 5)}%` }}
+                                  >
+                                    <span className="text-xs font-bold text-white">{percentage}%</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <span className="text-sm font-semibold text-gray-900 w-16 text-right">
+                                {count}
                               </span>
-                            </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2">
-                              <div
-                                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                                style={{ width: `${percentage}%` }}
-                              ></div>
                             </div>
                           </div>
                         );
@@ -266,16 +270,20 @@ export default function AnalyticsPage() {
                         return (
                           <div key={gender}>
                             <div className="flex items-center justify-between mb-2">
-                              <span className="text-sm font-medium text-gray-700">{gender}</span>
-                              <span className="text-sm font-semibold text-gray-900">
-                                {count} ({percentage}%)
+                              <span className="text-sm font-medium text-gray-700 w-24">{gender}</span>
+                              <div className="flex-1 mx-4">
+                                <div className="w-full bg-gray-200 rounded-full h-8">
+                                  <div
+                                    className={`${color} h-8 rounded-full transition-all duration-300 flex items-center justify-end pr-3`}
+                                    style={{ width: `${Math.max(percentage, 5)}%` }}
+                                  >
+                                    <span className="text-xs font-bold text-white">{percentage}%</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <span className="text-sm font-semibold text-gray-900 w-16 text-right">
+                                {count}
                               </span>
-                            </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2">
-                              <div
-                                className={`${color} h-2 rounded-full transition-all duration-300`}
-                                style={{ width: `${percentage}%` }}
-                              ></div>
                             </div>
                           </div>
                         );
@@ -303,28 +311,44 @@ export default function AnalyticsPage() {
                         className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-6 border border-gray-200 hover:shadow-lg transition-shadow"
                       >
                         {/* Survey Title */}
-                        <h3 className="font-semibold text-gray-800 mb-4 line-clamp-2">
+                        <h3 className="font-semibold text-gray-800 mb-4 line-clamp-2 text-center">
                           {isRTL ? survey.title_ar : survey.title_en}
                         </h3>
 
-                        {/* Circular Progress */}
+                        {/* Circular Progress with Percentage */}
                         <div className="flex justify-center mb-6">
-                          <div className="relative">
-                            <CircularProgress
-                              percentage={Math.min(percentage, 100)}
-                              size={140}
-                              strokeWidth={6}
-                              status={status}
-                            />
+                          <div className="relative w-32 h-32">
+                            <svg className="w-full h-full" viewBox="0 0 120 120" style={{ transform: 'rotate(-90deg)' }}>
+                              {/* Background circle */}
+                              <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" strokeWidth="8" />
+                              
+                              {/* Progress circle */}
+                              {percentage > 0 && (
+                                <circle
+                                  cx="60"
+                                  cy="60"
+                                  r="50"
+                                  fill="none"
+                                  stroke={
+                                    status === 'excellent'
+                                      ? '#10b981'
+                                      : status === 'good'
+                                        ? '#f59e0b'
+                                        : '#ef4444'
+                                  }
+                                  strokeWidth="8"
+                                  strokeDasharray={`${(percentage / 100) * 314} 314`}
+                                  strokeLinecap="round"
+                                />
+                              )}
+                            </svg>
+                            
+                            {/* Center percentage */}
+                            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                              <span className="text-2xl font-bold text-gray-800">{percentage}%</span>
+                              <span className="text-xs text-gray-600">{survey.response_count}</span>
+                            </div>
                           </div>
-                        </div>
-
-                        {/* Response Count */}
-                        <div className="text-center mb-4">
-                          <p className="text-2xl font-bold text-gray-800">
-                            {survey.response_count}
-                          </p>
-                          <p className="text-sm text-gray-600">{t('admin.totalResponses')}</p>
                         </div>
 
                         {/* Status Badge */}
