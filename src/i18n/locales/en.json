@@ -169,7 +169,9 @@
     "satisfactionLevel": "Satisfaction Level",
     "satisfiedResponses": "Satisfied Responses",
     "responses": "responses",
-    "satisfactionDistribution": "Satisfaction Distribution"
+    "satisfactionDistribution": "Satisfaction Distribution",
+    "cloneSurvey": "Clone Survey",
+    "cloneSurveySuccess": "Survey cloned successfully"
   },
   "validation": {
     "required": "This field is required",

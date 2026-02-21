@@ -173,7 +173,9 @@
     "options": "الخيارات",
     "starRating": "تقييم بالنجوم",
     "percentageRange": "نطاق النسبة المئوية",
-    "satisfactionDistribution": "توزيع الرضا"
+    "satisfactionDistribution": "توزيع الرضا",
+    "cloneSurvey": "استنساخ الاستبيان",
+    "cloneSurveySuccess": "تم استنساخ الاستبيان بنجاح"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",

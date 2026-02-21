@@ -60,6 +60,7 @@ export default function SurveyDetailPage() {
   const [activeTab, setActiveTab] = useState<'details' | 'responses' | 'summary'>('details');
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [cloning, setCloning] = useState(false);
 
   const isRTL = i18n.language === 'ar';
 
@@ -161,6 +162,31 @@ export default function SurveyDetailPage() {
     return answer.value;
   };
 
+  const cloneSurvey = async () => {
+    try {
+      setCloning(true);
+      const response = await fetch(`/api/surveys/${surveyId}/clone`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to clone survey');
+      }
+
+      const clonedSurvey = await response.json();
+      alert(t('admin.cloneSurveySuccess'));
+      router.push(`/admin/surveys/${clonedSurvey.id}`);
+    } catch (err) {
+      console.error('Error cloning survey:', err);
+      alert(t('errors.serverError'));
+    } finally {
+      setCloning(false);
+    }
+  };
+
   if (loading) {
     return (
       <AdminLayout activeTab="surveys">
@@ -213,12 +239,21 @@ export default function SurveyDetailPage() {
               <h1 className="text-3xl font-bold text-gray-800">
                 {isRTL ? survey.title_ar : survey.title_en}
               </h1>
-              <Link
-                href={`/admin/surveys/${survey.id}/edit`}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
-              >
-                {t('admin.editSurvey')}
-              </Link>
+              <div className="flex gap-2">
+                <button
+                  onClick={cloneSurvey}
+                  disabled={cloning}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
+                >
+                  {cloning ? t('common.loading') : t('admin.cloneSurvey')}
+                </button>
+                <Link
+                  href={`/admin/surveys/${survey.id}/edit`}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                >
+                  {t('admin.editSurvey')}
+                </Link>
+              </div>
             </div>
             <p className="text-gray-600 mb-4">
               {isRTL ? survey.description_ar : survey.description_en}
