@@ -133,7 +133,7 @@ export default function SummaryReportDashboard({
     <div className="space-y-8">
       {/* Answer Rate Pie Chart */}
       <div className="bg-white border border-gray-200 rounded-lg p-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-6">{t('admin.answerRate') || 'Answer Rate'}</h3>
+        <h3 className="text-xl font-bold text-gray-800 mb-6">{t('admin.answerRate')}</h3>
         
         <div className="flex flex-col md:flex-row items-center justify-center gap-8">
           {/* Pie Chart */}
@@ -160,7 +160,7 @@ export default function SummaryReportDashboard({
             {/* Center Text */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span className="text-3xl font-bold text-green-600">{answerRate.percentage}%</span>
-              <span className="text-xs text-gray-600 mt-1">{t('admin.answered') || 'Answered'}</span>
+              <span className="text-xs text-gray-600 mt-1">{t('admin.answered')}</span>
             </div>
           </div>
 
@@ -169,7 +169,7 @@ export default function SummaryReportDashboard({
             <div className="flex items-center gap-3">
               <div className="w-4 h-4 bg-green-500 rounded"></div>
               <div>
-                <p className="text-sm text-gray-600">{t('admin.answered') || 'Answered'}</p>
+                <p className="text-sm text-gray-600">{t('admin.answered')}</p>
                 <p className="text-lg font-bold text-gray-800">{answerRate.answered}</p>
               </div>
             </div>
@@ -178,14 +178,14 @@ export default function SummaryReportDashboard({
               <div className="flex items-center gap-3">
                 <div className="w-4 h-4 bg-gray-300 rounded"></div>
                 <div>
-                  <p className="text-sm text-gray-600">{t('admin.notAnswered') || 'Not Answered'}</p>
+                  <p className="text-sm text-gray-600">{t('admin.notAnswered')}</p>
                   <p className="text-lg font-bold text-gray-800">{answerRate.notAnswered}</p>
                 </div>
               </div>
             )}
             
             <div className="pt-4 border-t border-gray-200">
-              <p className="text-sm text-gray-600">{t('admin.totalSurveys') || 'Total Surveys'}</p>
+              <p className="text-sm text-gray-600">{t('admin.totalSurveys')}</p>
               <p className="text-lg font-bold text-gray-800">{totalResponses || responses.length}</p>
             </div>
           </div>
@@ -195,13 +195,13 @@ export default function SummaryReportDashboard({
       {/* Overall Survey Satisfaction - Google Forms Style */}
       <div className="bg-white border border-gray-200 rounded-lg p-8">
         <h3 className="text-2xl font-bold text-gray-800 mb-8">
-          {t('admin.overallSatisfaction') || 'Overall Survey Satisfaction'}
+          {t('admin.overallSatisfaction')}
         </h3>
         
         {overallSatisfaction.totalCount === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-600 text-lg">
-              {t('survey.noSatisfactionData') || 'No rating data available for this survey'}
+              {t('admin.noSatisfactionData')}
             </p>
           </div>
         ) : (
@@ -240,7 +240,7 @@ export default function SummaryReportDashboard({
                     <span className={`text-5xl font-bold ${overallSatisfaction.color}`}>
                       {overallSatisfaction.score}%
                     </span>
-                    <span className="text-xs text-gray-600 mt-1">satisfied</span>
+                    <span className="text-xs text-gray-600 mt-1">{t('admin.satisfiedResponses')}</span>
                   </div>
                 </div>
               </div>
@@ -248,15 +248,15 @@ export default function SummaryReportDashboard({
               {/* Stats Cards */}
               <div className="flex-1 space-y-4">
                 <div className="bg-gradient-to-r from-green-50 to-green-100 border border-green-200 rounded-lg p-4">
-                  <p className="text-sm text-gray-600 mb-1">{t('admin.satisfiedResponses') || 'Satisfied Responses'}</p>
+                  <p className="text-sm text-gray-600 mb-1">{t('admin.satisfiedResponses')}</p>
                   <p className="text-3xl font-bold text-green-600">{overallSatisfaction.satisfiedCount}</p>
                   <p className="text-xs text-gray-600 mt-1">
-                    {t('admin.totalResponses') || 'Total Responses'}: {overallSatisfaction.totalCount}
+                    {t('admin.totalResponses')}: {overallSatisfaction.totalCount}
                   </p>
                 </div>
 
                 <div className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4">
-                  <p className="text-sm text-gray-600 mb-1">{t('admin.satisfactionLevel') || 'Satisfaction Level'}</p>
+                  <p className="text-sm text-gray-600 mb-1">{t('admin.satisfactionLevel')}</p>
                   <p className="text-2xl font-bold text-blue-600">{overallSatisfaction.label}</p>
                 </div>
               </div>
@@ -265,7 +265,7 @@ export default function SummaryReportDashboard({
             {/* Satisfaction Distribution Bar - Google Forms Style */}
             <div className="mt-8 pt-8 border-t border-gray-200">
               <h4 className="text-lg font-semibold text-gray-800 mb-6">
-                {t('admin.satisfactionDistribution') || 'Satisfaction Distribution'}
+                {t('admin.satisfactionDistribution')}
               </h4>
               
               <div className="space-y-5">
@@ -273,7 +273,7 @@ export default function SummaryReportDashboard({
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm font-medium text-gray-700 w-32">
-                      {t('survey.verySatisfied') || 'Very Satisfied'} (5)
+                      {t('survey.verySatisfied')} (5)
                     </span>
                     <span className="text-sm font-bold text-gray-800 w-12 text-right">
                       {Math.round(
@@ -307,7 +307,7 @@ export default function SummaryReportDashboard({
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm font-medium text-gray-700 w-32">
-                      {t('survey.satisfied') || 'Satisfied'} (4)
+                      {t('survey.satisfied')} (4)
                     </span>
                     <span className="text-sm font-bold text-gray-800 w-12 text-right">
                       {Math.round(
@@ -341,7 +341,7 @@ export default function SummaryReportDashboard({
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm font-medium text-gray-700 w-32">
-                      {t('survey.neutral') || 'Neutral'} (3)
+                      {t('survey.neutral')} (3)
                     </span>
                     <span className="text-sm font-bold text-gray-800 w-12 text-right">
                       {Math.round(
@@ -375,7 +375,7 @@ export default function SummaryReportDashboard({
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm font-medium text-gray-700 w-32">
-                      {t('survey.dissatisfied') || 'Dissatisfied'} (2)
+                      {t('survey.dissatisfied')} (2)
                     </span>
                     <span className="text-sm font-bold text-gray-800 w-12 text-right">
                       {Math.round(
@@ -409,7 +409,7 @@ export default function SummaryReportDashboard({
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm font-medium text-gray-700 w-32">
-                      {t('survey.veryDissatisfied') || 'Very Dissatisfied'} (1)
+                      {t('survey.veryDissatisfied')} (1)
                     </span>
                     <span className="text-sm font-bold text-gray-800 w-12 text-right">
                       {Math.round(

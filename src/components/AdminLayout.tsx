@@ -24,7 +24,7 @@ export default function AdminLayout({ children, activeTab = 'surveys' }: AdminLa
   const navItems = [
     { id: 'analytics', label: t('admin.analytics'), href: '/admin/analytics' },
     { id: 'surveys', label: t('admin.surveys'), href: '/admin/surveys' },
-    { id: 'respondents', label: 'Respondents', href: '/admin/respondents' },
+    { id: 'respondents', label: t('admin.respondents'), href: '/admin/respondents' },
     { id: 'settings', label: t('admin.settings'), href: '/admin/settings' },
   ];
 
@@ -95,7 +95,7 @@ export default function AdminLayout({ children, activeTab = 'surveys' }: AdminLa
           <h2 className="text-2xl font-bold text-gray-800">
             {activeTab === 'surveys' && t('admin.surveys')}
             {activeTab === 'analytics' && t('admin.analytics')}
-            {activeTab === 'respondents' && 'Respondents'}
+            {activeTab === 'respondents' && t('admin.respondents')}
             {activeTab === 'settings' && t('admin.settings')}
           </h2>
           <div className="flex items-center gap-4">
