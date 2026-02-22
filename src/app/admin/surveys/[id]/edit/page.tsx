@@ -516,7 +516,7 @@ export default function EditSurveyPage() {
                       {/* Category */}
                       <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-3">
-                          {isRTL ? 'الفئة (اختياري)' : 'Category (Optional)'}
+                          {t('survey.categoryOptional')}
                         </label>
                         <input
                           type="text"
