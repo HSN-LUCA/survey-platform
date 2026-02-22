@@ -177,7 +177,8 @@
     "responses": "responses",
     "satisfactionDistribution": "Satisfaction Distribution",
     "cloneSurvey": "Clone Survey",
-    "cloneSurveySuccess": "Survey cloned successfully"
+    "cloneSurveySuccess": "Survey cloned successfully",
+    "surveyPerformance": "Survey Engagement"
   },
   "validation": {
     "required": "This field is required",
