@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import LanguageSelectionModal from '@/components/LanguageSelectionModal';
-import QRCode from 'qrcode.react';
 
 interface Question {
   id: string;
@@ -72,21 +71,6 @@ export default function Home() {
       return `${window.location.origin}/survey/${surveyId}`;
     }
     return `/survey/${surveyId}`;
-  };
-
-  const getFirstCategory = (survey: Survey): string | null => {
-    if (!survey.questions || survey.questions.length === 0) {
-      return null;
-    }
-
-    const categoryField = isRTL ? 'category_ar' : 'category_en';
-    for (const question of survey.questions) {
-      const category = question[categoryField as keyof Question];
-      if (category && typeof category === 'string' && category.trim()) {
-        return category;
-      }
-    }
-    return null;
   };
 
   if (!languageSelected) {
@@ -194,42 +178,46 @@ export default function Home() {
                     {isRTL ? survey.description_ar : survey.description_en}
                   </p>
 
-                  {/* Category */}
-                  {getFirstCategory(survey) && (
-                    <div className="mb-6 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                      <p className="text-sm text-blue-700 font-medium">
-                        {isRTL ? 'الفئة: ' : 'Category: '}
-                        <span className="font-semibold">{getFirstCategory(survey)}</span>
-                      </p>
-                    </div>
-                  )}
-
-                  {/* QR Code */}
+                  {/* Kaaba Image */}
                   <div className="flex justify-center mb-6 p-4 bg-gray-50 rounded-lg">
-                    <QRCode
-                      value={getSurveyUrl(survey.id)}
-                      size={120}
-                      level="H"
-                      includeMargin={true}
-                      fgColor="#000000"
-                      bgColor="#ffffff"
+                    <img
+                      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23f3f4f6'/%3E%3Crect x='50' y='60' width='100' height='100' fill='%23000' stroke='%23d4af37' stroke-width='3'/%3E%3Crect x='60' y='70' width='80' height='80' fill='%23111'/%3E%3Ccircle cx='100' cy='100' r='30' fill='%23d4af37' opacity='0.3'/%3E%3Cpath d='M 70 140 L 100 160 L 130 140' fill='%23d4af37'/%3E%3C/svg%3E"
+                      alt="Kaaba"
+                      className="w-24 h-24 object-contain"
                     />
                   </div>
 
-                  {/* QR Code Description */}
-                  <p className="text-xs text-gray-500 text-center mb-4">
-                    {isRTL
-                      ? 'امسح رمز QR للبدء'
-                      : 'Scan QR code to start'}
-                  </p>
+                  {/* Action Buttons */}
+                  <div className="space-y-3">
+                    {/* Start Button */}
+                    <Link
+                      href={`/survey/${survey.id}`}
+                      className="block w-full px-4 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors font-semibold text-center"
+                    >
+                      {isRTL ? 'ابدأ الاستبيان' : 'Start Survey'}
+                    </Link>
 
-                  {/* Start Button */}
-                  <Link
-                    href={`/survey/${survey.id}`}
-                    className="block w-full px-4 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors font-semibold text-center"
-                  >
-                    {isRTL ? 'ابدأ الاستبيان' : 'Start Survey'}
-                  </Link>
+                    {/* Share Button */}
+                    <button
+                      onClick={() => {
+                        const url = getSurveyUrl(survey.id);
+                        if (navigator.share) {
+                          navigator.share({
+                            title: isRTL ? survey.title_ar : survey.title_en,
+                            text: isRTL ? 'شارك هذا الاستبيان' : 'Share this survey',
+                            url: url,
+                          });
+                        } else {
+                          // Fallback: copy to clipboard
+                          navigator.clipboard.writeText(url);
+                          alert(isRTL ? 'تم نسخ الرابط' : 'Link copied to clipboard');
+                        }
+                      }}
+                      className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold text-center"
+                    >
+                      {isRTL ? 'شارك' : 'Share'}
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
