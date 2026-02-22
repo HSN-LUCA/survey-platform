@@ -11,6 +11,13 @@ psql -U your_user -d your_database -f scripts/add-image-url-column.sql
 supabase db push
 ```
 
+**Important**: If you already ran the old migration with the index, remove it first:
+```sql
+DROP INDEX IF EXISTS idx_surveys_image_url;
+```
+
+See `docs/IMAGE_UPLOAD_INDEX_FIX.md` for details on why the index was removed.
+
 ### 2. Deploy Code
 All code changes are already implemented. Just deploy the updated files.
 
