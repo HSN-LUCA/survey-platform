@@ -72,19 +72,40 @@ export default function QuestionAnswerDistribution({
     return value;
   };
 
-  // Convert distribution to array and sort by count
+  // Get color based on question type and value
+  const getColorForValue = (value: string, type: string) => {
+    if (type === 'star_rating') {
+      const starValue = Number(value);
+      switch (starValue) {
+        case 5:
+          return '#10b981'; // emerald - Very Satisfied
+        case 4:
+          return '#22c55e'; // green - Satisfied
+        case 3:
+          return '#facc15'; // yellow - Neutral
+        case 2:
+          return '#f97316'; // orange - Dissatisfied
+        case 1:
+          return '#ef4444'; // red - Very Dissatisfied
+        default:
+          return '#3b82f6';
+      }
+    }
+    return COLORS[Object.keys(distribution).indexOf(value) % COLORS.length];
+  };
   const distributionArray = Object.entries(distribution)
     .map(([value, count]) => ({
       value,
       count,
       percentage: Math.round((count / totalAnswers) * 100),
       label: getAnswerLabel(value),
+      color: getColorForValue(value, questionType),
     }))
     .sort((a, b) => b.count - a.count);
 
   // Calculate pie chart segments
   let currentAngle = 0;
-  const segments = distributionArray.map((item, index) => {
+  const segments = distributionArray.map((item) => {
     const sliceAngle = (item.percentage / 100) * 360;
     const startAngle = currentAngle;
     const endAngle = currentAngle + sliceAngle;
@@ -110,7 +131,6 @@ export default function QuestionAnswerDistribution({
     return {
       ...item,
       pathData,
-      color: COLORS[index % COLORS.length],
     };
   });
 
