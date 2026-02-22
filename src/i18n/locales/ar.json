@@ -96,7 +96,15 @@
     "category": "الفئة",
     "categoryOptional": "الفئة (اختياري)",
     "categoryPlaceholder": "مثال: جودة الخدمة",
-    "categoryHint": "استخدم نفس الفئة لتجميع الأسئلة ذات الصلة"
+    "categoryHint": "استخدم نفس الفئة لتجميع الأسئلة ذات الصلة",
+    "image": "صورة الاستبيان",
+    "imageUpload": "تحميل الصورة",
+    "imageOptional": "الصورة (اختياري)",
+    "selectImage": "اختر صورة",
+    "uploadImage": "تحميل الصورة",
+    "imagePreview": "معاينة الصورة",
+    "noImageSelected": "لم يتم اختيار صورة",
+    "imageSizeWarning": "سيتم تخزين الصورة كـ base64. احفظ حجم الملف معقولاً (أقل من 2 ميجابايت موصى به)"
   },
   "admin": {
     "dashboard": "لوحة تحكم المسؤول",

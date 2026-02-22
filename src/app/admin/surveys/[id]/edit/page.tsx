@@ -44,6 +44,7 @@ export default function EditSurveyPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [customerType, setCustomerType] = useState<'pilgrims' | 'staff'>('pilgrims');
   const [hasResponses, setHasResponses] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const isRTL = i18n.language === 'ar';
 
   // Load survey data on mount
@@ -82,6 +83,7 @@ export default function EditSurveyPage() {
       setDescriptionEn(survey.description_en || '');
       setDescriptionAr(survey.description_ar || '');
       setCustomerType(survey.customer_type);
+      setImageUrl(survey.image_url || null);
 
       // Load questions with options
       if (survey.questions && survey.questions.length > 0) {
@@ -149,6 +151,32 @@ export default function EditSurveyPage() {
     setQuestions(questions.filter((q) => q.id !== id));
   };
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Check file size (limit to 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setError(isRTL ? 'حجم الملف كبير جداً (الحد الأقصى 5 ميجابايت)' : 'File size too large (max 5MB)');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const result = event.target?.result as string;
+        setImageUrl(result);
+        setError(null);
+      };
+      reader.onerror = () => {
+        setError(isRTL ? 'خطأ في قراءة الملف' : 'Error reading file');
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setImageUrl(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -197,6 +225,7 @@ export default function EditSurveyPage() {
           description_en: descriptionEn,
           description_ar: descriptionAr,
           customer_type: customerType,
+          image_url: imageUrl,
           questions,
         }),
       });
@@ -378,6 +407,62 @@ export default function EditSurveyPage() {
                     rows={4}
                     placeholder={isRTL ? 'أدخل الوصف بالعربية' : 'Enter description in Arabic'}
                   />
+                </div>
+              </div>
+
+              {/* Image Upload */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  {isRTL ? 'صورة الاستبيان (اختياري)' : 'Survey Image (Optional)'}
+                </label>
+                <div className="space-y-4">
+                  {!imageUrl ? (
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-yellow-600 transition-colors cursor-pointer bg-gray-50">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                        id="image-upload"
+                      />
+                      <label htmlFor="image-upload" className="cursor-pointer block">
+                        <svg className="w-12 h-12 mx-auto text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                        <p className="text-gray-700 font-medium">
+                          {isRTL ? 'انقر لتحميل صورة' : 'Click to upload image'}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {isRTL ? 'PNG, JPG, GIF (أقل من 5 ميجابايت)' : 'PNG, JPG, GIF (under 5MB)'}
+                        </p>
+                      </label>
+                    </div>
+                  ) : (
+                    <div className="border-2 border-green-300 rounded-lg p-6 bg-green-50">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="font-semibold text-green-900">
+                          {isRTL ? 'معاينة الصورة' : 'Image Preview'}
+                        </h4>
+                        <button
+                          type="button"
+                          onClick={removeImage}
+                          className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
+                        >
+                          {isRTL ? 'إزالة' : 'Remove'}
+                        </button>
+                      </div>
+                      <div className="flex justify-center p-4 bg-white rounded-lg border border-green-200">
+                        <img
+                          src={imageUrl}
+                          alt="Preview"
+                          className="max-w-xs max-h-48 object-contain"
+                        />
+                      </div>
+                    </div>
+                  )}
+                  <p className="text-xs text-gray-500">
+                    {isRTL ? 'سيتم تخزين الصورة كـ base64 في قاعدة البيانات' : 'Image will be stored as base64 in the database'}
+                  </p>
                 </div>
               </div>
             </div>

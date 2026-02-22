@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { title_en, title_ar, description_en, description_ar, questions, customer_type } = await req.json();
+    const { title_en, title_ar, description_en, description_ar, questions, customer_type, image_url } = await req.json();
 
     // Validate required fields
     if (!title_en || !title_ar) {
@@ -124,6 +124,7 @@ export async function POST(req: NextRequest) {
           description_ar,
           customer_type: customer_type || 'pilgrims',
           created_by: (decoded as any).id,
+          image_url: image_url || null,
         },
       ])
       .select()

@@ -96,7 +96,15 @@
     "category": "Category",
     "categoryOptional": "Category (Optional)",
     "categoryPlaceholder": "Example: Service Quality",
-    "categoryHint": "Use the same category to group related questions"
+    "categoryHint": "Use the same category to group related questions",
+    "image": "Survey Image",
+    "imageUpload": "Upload Image",
+    "imageOptional": "Image (Optional)",
+    "selectImage": "Select Image",
+    "uploadImage": "Upload Image",
+    "imagePreview": "Image Preview",
+    "noImageSelected": "No image selected",
+    "imageSizeWarning": "Image will be stored as base64. Keep file size reasonable (under 2MB recommended)"
   },
   "admin": {
     "dashboard": "Admin Dashboard",

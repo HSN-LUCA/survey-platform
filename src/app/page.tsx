@@ -20,6 +20,7 @@ interface Survey {
   description_en: string;
   description_ar: string;
   customer_type: string;
+  image_url?: string | null;
   questions?: Question[];
 }
 
@@ -216,13 +217,21 @@ export default function Home() {
                     {isRTL ? survey.description_ar : survey.description_en}
                   </p>
 
-                  {/* Kaaba Image */}
+                  {/* Image or Default Kaaba */}
                   <div className="flex justify-center mb-6 p-4 bg-gray-50 rounded-lg">
-                    <img
-                      src="/kaaba.svg"
-                      alt="Kaaba"
-                      className="w-32 h-32 object-contain"
-                    />
+                    {survey.image_url ? (
+                      <img
+                        src={survey.image_url}
+                        alt={isRTL ? survey.title_ar : survey.title_en}
+                        className="w-32 h-32 object-contain"
+                      />
+                    ) : (
+                      <img
+                        src="/kaaba.svg"
+                        alt="Kaaba"
+                        className="w-32 h-32 object-contain"
+                      />
+                    )}
                   </div>
 
                   {/* Start Button */}

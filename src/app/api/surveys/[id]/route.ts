@@ -96,7 +96,7 @@ export async function PUT(
       );
     }
 
-    const { title_en, title_ar, description_en, description_ar, customer_type, questions } = await req.json();
+    const { title_en, title_ar, description_en, description_ar, customer_type, questions, image_url } = await req.json();
 
     // Validate required fields
     if (!title_en || !title_ar) {
@@ -138,6 +138,7 @@ export async function PUT(
         description_en,
         description_ar,
         customer_type: customer_type || 'pilgrims',
+        image_url: image_url || null,
       })
       .eq('id', surveyId);
 
