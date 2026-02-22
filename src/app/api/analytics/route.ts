@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // Get response counts for each survey
+    // Get response counts and satisfaction scores for each survey
     const surveyStats = await Promise.all(
       filteredSurveys.map(async (survey) => {
         const { count, error } = await supabase
@@ -73,12 +73,38 @@ export async function GET(req: NextRequest) {
           return {
             ...survey,
             response_count: 0,
+            satisfaction_score: 0,
           };
+        }
+
+        // Get star rating questions for this survey
+        const { data: questions } = await supabase
+          .from('questions')
+          .select('id')
+          .eq('survey_id', survey.id)
+          .eq('type', 'star_rating');
+
+        let satisfactionScore = 0;
+        if (questions && questions.length > 0) {
+          // Get all answers for star rating questions
+          const { data: answers } = await supabase
+            .from('answers')
+            .select('value')
+            .in('question_id', questions.map(q => q.id));
+
+          if (answers && answers.length > 0) {
+            const totalStars = answers.reduce((sum, answer) => {
+              const stars = parseInt(answer.value) || 0;
+              return sum + stars;
+            }, 0);
+            satisfactionScore = Math.round((totalStars / (answers.length * 5)) * 100);
+          }
         }
 
         return {
           ...survey,
           response_count: count || 0,
+          satisfaction_score: satisfactionScore,
         };
       })
     );

@@ -10,6 +10,7 @@ interface SurveyStats {
   title_en: string;
   title_ar: string;
   response_count: number;
+  satisfaction_score: number;
   created_at: string;
 }
 
@@ -90,15 +91,14 @@ export default function AnalyticsPage() {
     }
   };
 
-  const getResponseStatus = (responseCount: number): 'excellent' | 'good' | 'needsImprovement' => {
-    if (responseCount >= 100) return 'excellent';
-    if (responseCount >= 50) return 'good';
+  const getResponseStatus = (satisfactionScore: number): 'excellent' | 'good' | 'needsImprovement' => {
+    if (satisfactionScore >= 80) return 'excellent';
+    if (satisfactionScore >= 60) return 'good';
     return 'needsImprovement';
   };
 
-  const getResponsePercentage = (responseCount: number): number => {
-    if (!data || data.totalResponses === 0) return 0;
-    return Math.round((responseCount / data.totalResponses) * 100);
+  const getResponsePercentage = (satisfactionScore: number): number => {
+    return satisfactionScore;
   };
 
   if (loading && !data) {
@@ -352,8 +352,8 @@ export default function AnalyticsPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {data.surveys.map((survey) => {
-                    const status = getResponseStatus(survey.response_count);
-                    const percentage = getResponsePercentage(survey.response_count);
+                    const satisfactionScore = survey.satisfaction_score;
+                    const status = getResponseStatus(satisfactionScore);
 
                     return (
                       <div
@@ -373,7 +373,7 @@ export default function AnalyticsPage() {
                               <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" strokeWidth="8" />
                               
                               {/* Progress circle */}
-                              {percentage > 0 && (
+                              {satisfactionScore > 0 && (
                                 <circle
                                   cx="60"
                                   cy="60"
@@ -387,7 +387,7 @@ export default function AnalyticsPage() {
                                         : '#ef4444'
                                   }
                                   strokeWidth="8"
-                                  strokeDasharray={`${(percentage / 100) * 314} 314`}
+                                  strokeDasharray={`${(satisfactionScore / 100) * 314} 314`}
                                   strokeLinecap="round"
                                 />
                               )}
@@ -395,29 +395,9 @@ export default function AnalyticsPage() {
                             
                             {/* Center percentage */}
                             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                              <span className="text-2xl font-bold text-gray-800">{percentage}%</span>
-                              <span className="text-xs text-gray-600">{survey.response_count}</span>
+                              <span className="text-2xl font-bold text-gray-800">{satisfactionScore}%</span>
                             </div>
                           </div>
-                        </div>
-
-                        {/* Status Badge */}
-                        <div className="flex justify-center">
-                          {status === 'excellent' && (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                              ✓ {t('admin.excellent')}
-                            </span>
-                          )}
-                          {status === 'good' && (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
-                              ◐ {t('admin.good')}
-                            </span>
-                          )}
-                          {status === 'needsImprovement' && (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
-                              ✕ {t('admin.needsImprovement')}
-                            </span>
-                          )}
                         </div>
 
                         {/* Date Created */}
