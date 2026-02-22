@@ -7,6 +7,12 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import LanguageSelectionModal from '@/components/LanguageSelectionModal';
 import QRCode from 'qrcode.react';
 
+interface Question {
+  id: string;
+  category_en: string | null;
+  category_ar: string | null;
+}
+
 interface Survey {
   id: string;
   title_en: string;
@@ -14,6 +20,7 @@ interface Survey {
   description_en: string;
   description_ar: string;
   customer_type: string;
+  questions?: Question[];
 }
 
 export default function Home() {
@@ -65,6 +72,21 @@ export default function Home() {
       return `${window.location.origin}/survey/${surveyId}`;
     }
     return `/survey/${surveyId}`;
+  };
+
+  const getFirstCategory = (survey: Survey): string | null => {
+    if (!survey.questions || survey.questions.length === 0) {
+      return null;
+    }
+
+    const categoryField = isRTL ? 'category_ar' : 'category_en';
+    for (const question of survey.questions) {
+      const category = question[categoryField as keyof Question];
+      if (category && typeof category === 'string' && category.trim()) {
+        return category;
+      }
+    }
+    return null;
   };
 
   if (!languageSelected) {
@@ -171,6 +193,16 @@ export default function Home() {
                   <p className="text-gray-700 mb-6 line-clamp-3 text-sm leading-relaxed">
                     {isRTL ? survey.description_ar : survey.description_en}
                   </p>
+
+                  {/* Category */}
+                  {getFirstCategory(survey) && (
+                    <div className="mb-6 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                      <p className="text-sm text-blue-700 font-medium">
+                        {isRTL ? 'الفئة: ' : 'Category: '}
+                        <span className="font-semibold">{getFirstCategory(survey)}</span>
+                      </p>
+                    </div>
+                  )}
 
                   {/* QR Code */}
                   <div className="flex justify-center mb-6 p-4 bg-gray-50 rounded-lg">
