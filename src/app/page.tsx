@@ -166,52 +166,51 @@ export default function Home() {
                 {/* Card Header with Icon */}
                 <div className="bg-gradient-to-r from-yellow-600 to-yellow-700 p-6 text-white">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold">
-                      {isRTL ? survey.title_ar : survey.title_en}
-                    </h3>
-                    <span className="text-2xl">📋</span>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold">
+                        {isRTL ? survey.title_ar : survey.title_en}
+                      </h3>
+                    </div>
+                    <div className="flex gap-2 ml-4">
+                      {/* Share Button */}
+                      <button
+                        onClick={() => {
+                          const url = getSurveyUrl(survey.id);
+                          if (navigator.share) {
+                            navigator.share({
+                              title: isRTL ? survey.title_ar : survey.title_en,
+                              text: isRTL ? 'شارك هذا الاستبيان' : 'Share this survey',
+                              url: url,
+                            });
+                          } else {
+                            navigator.clipboard.writeText(url);
+                            alert(isRTL ? 'تم نسخ الرابط' : 'Link copied to clipboard');
+                          }
+                        }}
+                        title={isRTL ? 'شارك' : 'Share'}
+                        className="p-2 bg-yellow-500 hover:bg-yellow-400 rounded-full transition-colors"
+                      >
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.15c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.44 9.31 6.77 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.77 0 1.44-.3 1.96-.77l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+                        </svg>
+                      </button>
+
+                      {/* QR Code Button */}
+                      <button
+                        onClick={() => setShowQRModal(survey.id)}
+                        title={isRTL ? 'رمز QR' : 'QR Code'}
+                        className="p-2 bg-yellow-500 hover:bg-yellow-400 rounded-full transition-colors"
+                      >
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm13-2h-2v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/>
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
 
                 {/* Card Body */}
                 <div className="p-6 relative">
-                  {/* Icon Buttons - Top Right Corner */}
-                  <div className="absolute top-4 right-4 flex gap-2">
-                    {/* Share Button */}
-                    <button
-                      onClick={() => {
-                        const url = getSurveyUrl(survey.id);
-                        if (navigator.share) {
-                          navigator.share({
-                            title: isRTL ? survey.title_ar : survey.title_en,
-                            text: isRTL ? 'شارك هذا الاستبيان' : 'Share this survey',
-                            url: url,
-                          });
-                        } else {
-                          navigator.clipboard.writeText(url);
-                          alert(isRTL ? 'تم نسخ الرابط' : 'Link copied to clipboard');
-                        }
-                      }}
-                      title={isRTL ? 'شارك' : 'Share'}
-                      className="p-2 bg-blue-100 hover:bg-blue-200 rounded-full transition-colors"
-                    >
-                      <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.15c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.44 9.31 6.77 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.77 0 1.44-.3 1.96-.77l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
-                      </svg>
-                    </button>
-
-                    {/* QR Code Button */}
-                    <button
-                      onClick={() => setShowQRModal(survey.id)}
-                      title={isRTL ? 'رمز QR' : 'QR Code'}
-                      className="p-2 bg-yellow-100 hover:bg-yellow-200 rounded-full transition-colors"
-                    >
-                      <svg className="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm13-2h-2v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/>
-                      </svg>
-                    </button>
-                  </div>
-
                   {/* Description */}
                   <p className="text-gray-700 mb-6 line-clamp-3 text-sm leading-relaxed">
                     {isRTL ? survey.description_ar : survey.description_en}
@@ -220,9 +219,9 @@ export default function Home() {
                   {/* Kaaba Image */}
                   <div className="flex justify-center mb-6 p-4 bg-gray-50 rounded-lg">
                     <img
-                      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23f3f4f6'/%3E%3Crect x='50' y='60' width='100' height='100' fill='%23000' stroke='%23d4af37' stroke-width='3'/%3E%3Crect x='60' y='70' width='80' height='80' fill='%23111'/%3E%3Ccircle cx='100' cy='100' r='30' fill='%23d4af37' opacity='0.3'/%3E%3Cpath d='M 70 140 L 100 160 L 130 140' fill='%23d4af37'/%3E%3C/svg%3E"
+                      src="/kaaba.svg"
                       alt="Kaaba"
-                      className="w-24 h-24 object-contain"
+                      className="w-32 h-32 object-contain"
                     />
                   </div>
 
