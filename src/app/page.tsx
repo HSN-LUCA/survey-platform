@@ -157,21 +157,12 @@ export default function Home() {
               >
                 {/* Card Header with Icon */}
                 <div className="bg-gradient-to-r from-yellow-600 to-yellow-700 p-6 text-white">
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center justify-between">
                     <h3 className="text-xl font-bold">
                       {isRTL ? survey.title_ar : survey.title_en}
                     </h3>
                     <span className="text-2xl">📋</span>
                   </div>
-                  <p className="text-yellow-100 text-sm">
-                    {survey.customer_type === 'pilgrims'
-                      ? isRTL
-                        ? 'الحجاج'
-                        : 'Pilgrims'
-                      : isRTL
-                      ? 'الموظفون'
-                      : 'Staff'}
-                  </p>
                 </div>
 
                 {/* Card Body */}
