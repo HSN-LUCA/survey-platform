@@ -13,7 +13,8 @@ interface SurveyPageProps {
 }
 
 interface QuestionWithCategory extends Question {
-  category?: string;
+  category_en?: string;
+  category_ar?: string;
 }
 
 export default function SurveyPage({ surveyId }: SurveyPageProps) {
@@ -60,12 +61,18 @@ export default function SurveyPage({ surveyId }: SurveyPageProps) {
         const categoryList: string[] = [];
 
         data.questions.forEach((question: QuestionWithCategory) => {
-          const category = question.category || 'General';
-          if (!grouped[category]) {
-            grouped[category] = [];
-            categoryList.push(category);
+          // Use the appropriate language category
+          const isRTL = i18n.language === 'ar';
+          const category = isRTL ? question.category_ar : question.category_en;
+          
+          // Only group if category is not empty
+          if (category && category.trim()) {
+            if (!grouped[category]) {
+              grouped[category] = [];
+              categoryList.push(category);
+            }
+            grouped[category].push(question);
           }
-          grouped[category].push(question);
         });
 
         setGroupedQuestions(grouped);
@@ -377,9 +384,6 @@ export default function SurveyPage({ surveyId }: SurveyPageProps) {
                           <h2 className="text-2xl font-bold text-yellow-900 mb-2">
                             {category}
                           </h2>
-                          <p className="text-sm text-gray-600">
-                            {t('survey.category')} {catIndex + 1} {t('common.of')} {categories.length}
-                          </p>
                         </div>
                         <div className="text-4xl font-bold text-yellow-600 opacity-20">
                           {catIndex + 1}
