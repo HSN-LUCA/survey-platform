@@ -206,8 +206,15 @@ export async function PUT(
           order_num: i,
         };
 
-        if (q.category && q.category.trim()) {
-          questionData.category = q.category;
+        if (q.category_en && q.category_en.trim()) {
+          questionData.category_en = q.category_en;
+        }
+        if (q.category_ar && q.category_ar.trim()) {
+          questionData.category_ar = q.category_ar;
+        }
+        // Support legacy single category field for backward compatibility
+        if (q.category && q.category.trim() && !q.category_en && !q.category_ar) {
+          questionData.category_en = q.category;
         }
 
         let question;
@@ -345,8 +352,15 @@ export async function PUT(
           order_num: i,
         };
 
-        if (q.category && q.category.trim()) {
-          questionData.category = q.category;
+        if (q.category_en && q.category_en.trim()) {
+          questionData.category_en = q.category_en;
+        }
+        if (q.category_ar && q.category_ar.trim()) {
+          questionData.category_ar = q.category_ar;
+        }
+        // Support legacy single category field for backward compatibility
+        if (q.category && q.category.trim() && !q.category_en && !q.category_ar) {
+          questionData.category_en = q.category;
         }
 
         // Create new question

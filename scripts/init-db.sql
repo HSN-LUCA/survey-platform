@@ -40,13 +40,15 @@ CREATE TABLE IF NOT EXISTS questions (
   percentage_min INTEGER DEFAULT 0,
   percentage_max INTEGER DEFAULT 100,
   percentage_step INTEGER DEFAULT 5,
-  category VARCHAR(255),
+  category_ar VARCHAR(255),
+  category_en VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_questions_survey_id ON questions(survey_id);
 CREATE INDEX IF NOT EXISTS idx_questions_order ON questions(survey_id, order_num);
-CREATE INDEX IF NOT EXISTS idx_questions_category ON questions(category);
+CREATE INDEX IF NOT EXISTS idx_questions_category_ar ON questions(category_ar);
+CREATE INDEX IF NOT EXISTS idx_questions_category_en ON questions(category_en);
 
 -- Create options table
 CREATE TABLE IF NOT EXISTS options (

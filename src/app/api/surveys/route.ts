@@ -144,7 +144,7 @@ export async function POST(req: NextRequest) {
           throw new Error(`Question ${i + 1}: Content in both languages is required`);
         }
 
-        // Build question object - only include category if it exists and is not empty
+        // Build question object - only include categories if they exist and are not empty
         const questionData: any = {
           survey_id: survey.id,
           type: q.type,
@@ -154,9 +154,16 @@ export async function POST(req: NextRequest) {
           order_num: i,
         };
 
-        // Only add category if it's provided and not empty
-        if (q.category && q.category.trim()) {
-          questionData.category = q.category;
+        // Only add categories if they're provided and not empty
+        if (q.category_en && q.category_en.trim()) {
+          questionData.category_en = q.category_en;
+        }
+        if (q.category_ar && q.category_ar.trim()) {
+          questionData.category_ar = q.category_ar;
+        }
+        // Support legacy single category field for backward compatibility
+        if (q.category && q.category.trim() && !q.category_en && !q.category_ar) {
+          questionData.category_en = q.category;
         }
 
         const { data: question, error: questionError } = await supabase

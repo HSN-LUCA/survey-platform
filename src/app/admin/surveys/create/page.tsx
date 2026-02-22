@@ -23,7 +23,8 @@ interface Question {
   content_en: string;
   content_ar: string;
   required: boolean;
-  category?: string;
+  category_en?: string;
+  category_ar?: string;
   options?: Option[];
 }
 
@@ -47,7 +48,8 @@ export default function CreateSurveyPage() {
       content_en: '',
       content_ar: '',
       required: true,
-      category: '',
+      category_en: '',
+      category_ar: '',
       options: [],
     };
     setQuestions([...questions, newQuestion]);
@@ -408,25 +410,43 @@ export default function CreateSurveyPage() {
                       </div>
 
                       {/* Category */}
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-3">
-                          {t('survey.categoryOptional')}
-                        </label>
-                        <input
-                          type="text"
-                          value={question.category || ''}
-                          onChange={(e) =>
-                            updateQuestion(question.id, {
-                              category: e.target.value,
-                            })
-                          }
-                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-yellow-600 focus:ring-2 focus:ring-yellow-100 bg-white text-black font-medium transition-all"
-                          placeholder={isRTL ? 'مثال: جودة الخدمة' : 'Example: Service Quality'}
-                        />
-                        <p className="text-xs text-gray-500 mt-1">
-                          {isRTL ? 'استخدم نفس الفئة لتجميع الأسئلة ذات الصلة' : 'Use the same category to group related questions'}
-                        </p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-3">
+                            {isRTL ? 'الفئة (الإنجليزية)' : 'Category (English)'}
+                          </label>
+                          <input
+                            type="text"
+                            value={question.category_en || ''}
+                            onChange={(e) =>
+                              updateQuestion(question.id, {
+                                category_en: e.target.value,
+                              })
+                            }
+                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-yellow-600 focus:ring-2 focus:ring-yellow-100 bg-white text-black font-medium transition-all"
+                            placeholder={isRTL ? 'مثال: Service Quality' : 'Example: Service Quality'}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-3">
+                            {isRTL ? 'الفئة (العربية)' : 'Category (Arabic)'}
+                          </label>
+                          <input
+                            type="text"
+                            value={question.category_ar || ''}
+                            onChange={(e) =>
+                              updateQuestion(question.id, {
+                                category_ar: e.target.value,
+                              })
+                            }
+                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-yellow-600 focus:ring-2 focus:ring-yellow-100 bg-white text-black font-medium transition-all"
+                            placeholder={isRTL ? 'مثال: جودة الخدمة' : 'Example: جودة الخدمة'}
+                          />
+                        </div>
                       </div>
+                      <p className="text-xs text-gray-500">
+                        {isRTL ? 'استخدم نفس الفئة لتجميع الأسئلة ذات الصلة' : 'Use the same category to group related questions'}
+                      </p>
 
                       {/* Options for Multiple Choice */}
                       {question.type === 'multiple_choice' && (

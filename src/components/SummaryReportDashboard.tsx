@@ -8,7 +8,8 @@ interface Question {
   type: string;
   content_en: string;
   content_ar: string;
-  category?: string;
+  category_en?: string;
+  category_ar?: string;
   options?: Array<{
     id: string;
     text_en: string;
@@ -120,7 +121,7 @@ export default function SummaryReportDashboard({
   // Group questions by category
   const groupedQuestions: Record<string, Question[]> = {};
   questions.forEach((q) => {
-    const category = q.category || 'General';
+    const category = isRTL ? (q.category_ar || 'عام') : (q.category_en || 'General');
     if (!groupedQuestions[category]) {
       groupedQuestions[category] = [];
     }
