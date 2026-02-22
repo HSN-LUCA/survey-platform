@@ -17,6 +17,7 @@ export async function GET(req: NextRequest) {
           description_en,
           description_ar,
           customer_type,
+          image_url,
           created_at,
           questions (
             id,
@@ -61,6 +62,7 @@ export async function GET(req: NextRequest) {
           description_en,
           description_ar,
           customer_type,
+          image_url,
           created_at,
           questions (
             id,
