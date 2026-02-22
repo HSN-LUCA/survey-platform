@@ -37,6 +37,32 @@ export default function SurveyPage({ surveyId }: SurveyPageProps) {
     fetchSurvey();
   }, [surveyId]);
 
+  useEffect(() => {
+    // Re-group questions when language changes
+    if (survey && survey.questions && survey.questions.length > 0) {
+      const grouped: Record<string, QuestionWithCategory[]> = {};
+      const categoryList: string[] = [];
+
+      survey.questions.forEach((question: QuestionWithCategory) => {
+        // Use the appropriate language category
+        const isRTL = i18n.language === 'ar';
+        const category = isRTL ? question.category_ar : question.category_en;
+        
+        // Only group if category is not empty
+        if (category && category.trim()) {
+          if (!grouped[category]) {
+            grouped[category] = [];
+            categoryList.push(category);
+          }
+          grouped[category].push(question);
+        }
+      });
+
+      setGroupedQuestions(grouped);
+      setCategories(categoryList);
+    }
+  }, [i18n.language, survey]);
+
   const fetchSurvey = async () => {
     try {
       setLoading(true);
@@ -54,30 +80,6 @@ export default function SurveyPage({ surveyId }: SurveyPageProps) {
 
       const data = await response.json();
       setSurvey(data);
-
-      // Group questions by category
-      if (data.questions && data.questions.length > 0) {
-        const grouped: Record<string, QuestionWithCategory[]> = {};
-        const categoryList: string[] = [];
-
-        data.questions.forEach((question: QuestionWithCategory) => {
-          // Use the appropriate language category
-          const isRTL = i18n.language === 'ar';
-          const category = isRTL ? question.category_ar : question.category_en;
-          
-          // Only group if category is not empty
-          if (category && category.trim()) {
-            if (!grouped[category]) {
-              grouped[category] = [];
-              categoryList.push(category);
-            }
-            grouped[category].push(question);
-          }
-        });
-
-        setGroupedQuestions(grouped);
-        setCategories(categoryList);
-      }
     } catch (err) {
       console.error('Error fetching survey:', err);
       setError(t('errors.networkError'));
@@ -373,7 +375,7 @@ export default function SurveyPage({ surveyId }: SurveyPageProps) {
                   <div key={category} className="mb-12">
                     {/* Category Header with Gold Background */}
                     <div className="mb-8 pb-6 border-b-4 border-yellow-600 bg-yellow-50 p-6 rounded-lg">
-                      <h2 className="text-2xl font-bold text-yellow-900">
+                      <h2 className="text-lg font-bold text-yellow-900">
                         {category}
                       </h2>
                     </div>
