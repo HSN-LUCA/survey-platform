@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import LanguageSelectionModal from '@/components/LanguageSelectionModal';
+import QRCode from 'qrcode.react';
 
 interface Question {
   id: string;
@@ -28,6 +29,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [languageSelected, setLanguageSelected] = useState(false);
+  const [showQRModal, setShowQRModal] = useState<string | null>(null);
 
   const isRTL = i18n.language === 'ar';
 
@@ -172,7 +174,44 @@ export default function Home() {
                 </div>
 
                 {/* Card Body */}
-                <div className="p-6">
+                <div className="p-6 relative">
+                  {/* Icon Buttons - Top Right Corner */}
+                  <div className="absolute top-4 right-4 flex gap-2">
+                    {/* Share Button */}
+                    <button
+                      onClick={() => {
+                        const url = getSurveyUrl(survey.id);
+                        if (navigator.share) {
+                          navigator.share({
+                            title: isRTL ? survey.title_ar : survey.title_en,
+                            text: isRTL ? 'شارك هذا الاستبيان' : 'Share this survey',
+                            url: url,
+                          });
+                        } else {
+                          navigator.clipboard.writeText(url);
+                          alert(isRTL ? 'تم نسخ الرابط' : 'Link copied to clipboard');
+                        }
+                      }}
+                      title={isRTL ? 'شارك' : 'Share'}
+                      className="p-2 bg-blue-100 hover:bg-blue-200 rounded-full transition-colors"
+                    >
+                      <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.15c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.44 9.31 6.77 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.77 0 1.44-.3 1.96-.77l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+                      </svg>
+                    </button>
+
+                    {/* QR Code Button */}
+                    <button
+                      onClick={() => setShowQRModal(survey.id)}
+                      title={isRTL ? 'رمز QR' : 'QR Code'}
+                      className="p-2 bg-yellow-100 hover:bg-yellow-200 rounded-full transition-colors"
+                    >
+                      <svg className="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm13-2h-2v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/>
+                      </svg>
+                    </button>
+                  </div>
+
                   {/* Description */}
                   <p className="text-gray-700 mb-6 line-clamp-3 text-sm leading-relaxed">
                     {isRTL ? survey.description_ar : survey.description_en}
@@ -187,38 +226,54 @@ export default function Home() {
                     />
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="space-y-3">
-                    {/* Start Button */}
-                    <Link
-                      href={`/survey/${survey.id}`}
-                      className="block w-full px-4 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors font-semibold text-center"
-                    >
-                      {isRTL ? 'ابدأ الاستبيان' : 'Start Survey'}
-                    </Link>
-
-                    {/* Share Button */}
-                    <button
-                      onClick={() => {
-                        const url = getSurveyUrl(survey.id);
-                        if (navigator.share) {
-                          navigator.share({
-                            title: isRTL ? survey.title_ar : survey.title_en,
-                            text: isRTL ? 'شارك هذا الاستبيان' : 'Share this survey',
-                            url: url,
-                          });
-                        } else {
-                          // Fallback: copy to clipboard
-                          navigator.clipboard.writeText(url);
-                          alert(isRTL ? 'تم نسخ الرابط' : 'Link copied to clipboard');
-                        }
-                      }}
-                      className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold text-center"
-                    >
-                      {isRTL ? 'شارك' : 'Share'}
-                    </button>
-                  </div>
+                  {/* Start Button */}
+                  <Link
+                    href={`/survey/${survey.id}`}
+                    className="block w-full px-4 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors font-semibold text-center"
+                  >
+                    {isRTL ? 'ابدأ الاستبيان' : 'Start Survey'}
+                  </Link>
                 </div>
+
+                {/* QR Code Modal */}
+                {showQRModal === survey.id && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg p-8 max-w-sm w-full mx-4">
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-lg font-bold text-gray-900">
+                          {isRTL ? 'رمز QR' : 'QR Code'}
+                        </h3>
+                        <button
+                          onClick={() => setShowQRModal(null)}
+                          className="text-gray-500 hover:text-gray-700"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      <div className="flex justify-center mb-4 p-4 bg-gray-50 rounded-lg">
+                        <QRCode
+                          value={getSurveyUrl(survey.id)}
+                          size={200}
+                          level="H"
+                          includeMargin={true}
+                          fgColor="#000000"
+                          bgColor="#ffffff"
+                        />
+                      </div>
+                      <p className="text-sm text-gray-600 text-center mb-4">
+                        {isRTL
+                          ? 'امسح رمز QR للبدء'
+                          : 'Scan QR code to start'}
+                      </p>
+                      <button
+                        onClick={() => setShowQRModal(null)}
+                        className="w-full px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+                      >
+                        {isRTL ? 'إغلاق' : 'Close'}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
