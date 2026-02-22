@@ -201,6 +201,57 @@ export default function AnalyticsPage() {
 
         {data && (
           <>
+            {/* Satisfaction Score Bar */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-bold text-gray-800 mb-6">{t('admin.satisfactionScore')}</h2>
+              <div className="flex items-end justify-between gap-4">
+                {/* Not at all Satisfied */}
+                <div className="flex flex-col items-center flex-1">
+                  <div className="text-4xl mb-2">😞</div>
+                  <div className="w-full bg-red-200 rounded-lg h-12 flex items-center justify-center">
+                    <span className="text-lg font-bold text-red-700">1%</span>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-2 text-center">{t('survey.veryDissatisfied')}</p>
+                </div>
+
+                {/* Dissatisfied */}
+                <div className="flex flex-col items-center flex-1">
+                  <div className="text-4xl mb-2">😕</div>
+                  <div className="w-full bg-orange-200 rounded-lg h-12 flex items-center justify-center">
+                    <span className="text-lg font-bold text-orange-700">5%</span>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-2 text-center">{t('survey.dissatisfied')}</p>
+                </div>
+
+                {/* Neutral */}
+                <div className="flex flex-col items-center flex-1">
+                  <div className="text-4xl mb-2">😐</div>
+                  <div className="w-full bg-yellow-200 rounded-lg h-12 flex items-center justify-center">
+                    <span className="text-lg font-bold text-yellow-700">24%</span>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-2 text-center">{t('survey.neutral')}</p>
+                </div>
+
+                {/* Satisfied */}
+                <div className="flex flex-col items-center flex-1">
+                  <div className="text-4xl mb-2">🙂</div>
+                  <div className="w-full bg-green-200 rounded-lg h-12 flex items-center justify-center">
+                    <span className="text-lg font-bold text-green-700">44%</span>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-2 text-center">{t('survey.satisfied')}</p>
+                </div>
+
+                {/* Completely Satisfied */}
+                <div className="flex flex-col items-center flex-1">
+                  <div className="text-4xl mb-2">😄</div>
+                  <div className="w-full bg-emerald-200 rounded-lg h-12 flex items-center justify-center">
+                    <span className="text-lg font-bold text-emerald-700">31%</span>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-2 text-center">{t('survey.verySatisfied')}</p>
+                </div>
+              </div>
+            </div>
+
             {/* Demographics Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Age Range Chart */}

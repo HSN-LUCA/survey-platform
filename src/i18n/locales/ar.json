@@ -137,6 +137,7 @@
     "from": "من",
     "to": "إلى",
     "dateRangeLabel": "من - إلى",
+    "satisfactionScore": "درجة الرضا",
     "exportResults": "تصدير النتائج",
     "exportCSV": "📥 تصدير CSV",
     "exportPDF": "تصدير كـ PDF",

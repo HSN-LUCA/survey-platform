@@ -135,6 +135,7 @@
     "from": "From",
     "to": "To",
     "dateRangeLabel": "Date Range",
+    "satisfactionScore": "Satisfaction Score",
     "exportResults": "Export Results",
     "exportCSV": "📥 Export CSV",
     "exportPDF": "Export as PDF",
