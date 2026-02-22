@@ -375,62 +375,50 @@ export default function SurveyPage({ surveyId }: SurveyPageProps) {
           <form onSubmit={handleSubmit}>
             <div className="space-y-8">
               {categories.length > 0 ? (
-                categories.map((category, catIndex) => (
-                  <div key={category} className="mb-12">
-                    {/* Category Header with Visual Separator */}
-                    <div className="mb-8 pb-6 border-b-4 border-yellow-600 bg-yellow-50 p-6 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h2 className="text-2xl font-bold text-yellow-900 mb-2">
-                            {category}
-                          </h2>
+                <div className="space-y-8">
+                  {survey?.questions?.map((question, qIndex) => (
+                    <div
+                      key={question.id}
+                      className={`pb-6 border-b border-gray-200 last:border-b-0 ${
+                        validationErrors.includes(question.id) ? 'bg-red-50 p-4 rounded' : ''
+                      }`}
+                    >
+                      {/* Category Label - shown inline with question */}
+                      {question.category_en && question.category_ar && (
+                        <div className="mb-3 text-sm text-gray-600 font-medium">
+                          {isRTL ? question.category_ar : question.category_en}
                         </div>
-                        <div className="text-4xl font-bold text-yellow-600 opacity-20">
-                          {catIndex + 1}
-                        </div>
-                      </div>
-                    </div>
+                      )}
 
-                    {/* Questions in Category */}
-                    <div className="space-y-8">
-                      {groupedQuestions[category]?.map((question, qIndex) => (
-                        <div
-                          key={question.id}
-                          className={`pb-6 border-b border-gray-200 last:border-b-0 ${
-                            validationErrors.includes(question.id) ? 'bg-red-50 p-4 rounded' : ''
-                          }`}
-                        >
-                          <div className="mb-4">
-                            <label className="block">
-                              <span className="text-yellow-900 font-semibold">
-                                Q.{qIndex + 1}
-                              </span>
-                              <span className="text-yellow-900 font-semibold ml-2">
-                                {isRTL ? question.content_ar : question.content_en}
-                              </span>
-                              {question.required && (
-                                <span className="text-red-500 ml-1">*</span>
-                              )}
-                            </label>
-                          </div>
-
-                          <QuestionRenderer
-                            question={question}
-                            value={answers[question.id]}
-                            onChange={(value) => handleAnswerChange(question.id, value)}
-                            isRTL={isRTL}
-                          />
-
-                          {validationErrors.includes(question.id) && (
-                            <p className="text-red-600 text-sm mt-2">
-                              {t('validation.required')}
-                            </p>
+                      <div className="mb-4">
+                        <label className="block">
+                          <span className="text-yellow-900 font-semibold">
+                            Q.{qIndex + 1}
+                          </span>
+                          <span className="text-yellow-900 font-semibold ml-2">
+                            {isRTL ? question.content_ar : question.content_en}
+                          </span>
+                          {question.required && (
+                            <span className="text-red-500 ml-1">*</span>
                           )}
-                        </div>
-                      ))}
+                        </label>
+                      </div>
+
+                      <QuestionRenderer
+                        question={question}
+                        value={answers[question.id]}
+                        onChange={(value) => handleAnswerChange(question.id, value)}
+                        isRTL={isRTL}
+                      />
+
+                      {validationErrors.includes(question.id) && (
+                        <p className="text-red-600 text-sm mt-2">
+                          {t('validation.required')}
+                        </p>
+                      )}
                     </div>
-                  </div>
-                ))
+                  ))}
+                </div>
               ) : (
                 // Fallback if no categories
                 <div className="space-y-8">
@@ -441,6 +429,13 @@ export default function SurveyPage({ surveyId }: SurveyPageProps) {
                         validationErrors.includes(question.id) ? 'bg-red-50 p-4 rounded' : ''
                       }`}
                     >
+                      {/* Category Label - shown inline with question */}
+                      {question.category_en && question.category_ar && (
+                        <div className="mb-3 text-sm text-gray-600 font-medium">
+                          {isRTL ? question.category_ar : question.category_en}
+                        </div>
+                      )}
+
                       <div className="mb-4">
                         <label className="block">
                           <span className="text-yellow-900 font-semibold">

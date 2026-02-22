@@ -48,6 +48,8 @@ export interface Question {
   required: boolean;
   order_num: number;
   category?: string;
+  category_en?: string;
+  category_ar?: string;
   options?: Option[];
   star_config?: StarRatingConfig;
   percentage_config?: PercentageConfig;
