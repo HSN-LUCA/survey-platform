@@ -25,7 +25,8 @@ export async function GET(req: NextRequest) {
             content_ar,
             required,
             order_num,
-            category,
+            category_en,
+            category_ar,
             options (
               id,
               text_en,
@@ -68,7 +69,8 @@ export async function GET(req: NextRequest) {
             content_ar,
             required,
             order_num,
-            category,
+            category_en,
+            category_ar,
             options (
               id,
               text_en,
