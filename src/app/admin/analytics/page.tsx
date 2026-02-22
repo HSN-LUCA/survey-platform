@@ -44,11 +44,9 @@ export default function AnalyticsPage() {
     }
     setToken(storedToken);
 
-    // Set default date range (last 30 days)
-    const today = new Date();
-    const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
-    setFromDate(thirtyDaysAgo.toISOString().split('T')[0]);
-    setToDate(today.toISOString().split('T')[0]);
+    // Set default date range (1-1-2026 to 31-12-2026)
+    setFromDate('2026-01-01');
+    setToDate('2026-12-31');
   }, [router]);
 
   useEffect(() => {

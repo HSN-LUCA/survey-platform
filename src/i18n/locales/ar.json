@@ -181,7 +181,8 @@
     "percentageRange": "نطاق النسبة المئوية",
     "satisfactionDistribution": "توزيع الرضا",
     "cloneSurvey": "استنساخ الاستبيان",
-    "cloneSurveySuccess": "تم استنساخ الاستبيان بنجاح"
+    "cloneSurveySuccess": "تم استنساخ الاستبيان بنجاح",
+    "surveyPerformance": "التفاعل مع الاستبيان"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
