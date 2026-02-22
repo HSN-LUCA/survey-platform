@@ -356,13 +356,7 @@ export default function SurveyPage({ surveyId }: SurveyPageProps) {
           </div>
 
           {/* Progress Bar */}
-          {categories.length > 0 && (
-            <SurveyProgressBar
-              categories={categories}
-              currentCategoryIndex={currentCategoryIndex}
-              isComplete={false}
-            />
-          )}
+          {/* Removed - no progress bar needed */}
 
           {/* Error Message */}
           {error && (
