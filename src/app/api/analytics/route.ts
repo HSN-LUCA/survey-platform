@@ -134,6 +134,63 @@ export async function GET(req: NextRequest) {
     // Calculate totals
     const totalResponses = surveyStats.reduce((sum, survey) => sum + survey.response_count, 0);
 
+    // Calculate satisfaction distribution from all responses
+    let satisfactionCounts = {
+      veryDissatisfied: 0,
+      dissatisfied: 0,
+      neutral: 0,
+      satisfied: 0,
+      verySatisfied: 0,
+    };
+
+    // Get all answers for star rating questions
+    const { data: allAnswers } = await supabase
+      .from('answers')
+      .select('value, question_id');
+
+    if (allAnswers) {
+      // Get all star rating questions
+      const { data: starQuestions } = await supabase
+        .from('questions')
+        .select('id')
+        .eq('type', 'star_rating');
+
+      const starQuestionIds = starQuestions?.map(q => q.id) || [];
+
+      allAnswers.forEach((answer: any) => {
+        if (starQuestionIds.includes(answer.question_id)) {
+          const starValue = Number(answer.value);
+          switch (starValue) {
+            case 1:
+              satisfactionCounts.veryDissatisfied++;
+              break;
+            case 2:
+              satisfactionCounts.dissatisfied++;
+              break;
+            case 3:
+              satisfactionCounts.neutral++;
+              break;
+            case 4:
+              satisfactionCounts.satisfied++;
+              break;
+            case 5:
+              satisfactionCounts.verySatisfied++;
+              break;
+          }
+        }
+      });
+    }
+
+    // Convert counts to percentages
+    const totalStarRatings = Object.values(satisfactionCounts).reduce((a, b) => a + b, 0);
+    const satisfactionDistribution = {
+      veryDissatisfied: totalStarRatings > 0 ? Math.round((satisfactionCounts.veryDissatisfied / totalStarRatings) * 100) : 0,
+      dissatisfied: totalStarRatings > 0 ? Math.round((satisfactionCounts.dissatisfied / totalStarRatings) * 100) : 0,
+      neutral: totalStarRatings > 0 ? Math.round((satisfactionCounts.neutral / totalStarRatings) * 100) : 0,
+      satisfied: totalStarRatings > 0 ? Math.round((satisfactionCounts.satisfied / totalStarRatings) * 100) : 0,
+      verySatisfied: totalStarRatings > 0 ? Math.round((satisfactionCounts.verySatisfied / totalStarRatings) * 100) : 0,
+    };
+
     return NextResponse.json(
       {
         totalSurveys: surveyStats.length,
@@ -143,6 +200,7 @@ export async function GET(req: NextRequest) {
           ageRange: ageRangeStats,
           gender: genderStats,
         },
+        satisfactionDistribution,
       },
       { status: 200 }
     );
