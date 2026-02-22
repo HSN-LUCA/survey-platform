@@ -154,16 +154,17 @@ export async function POST(req: NextRequest) {
           order_num: i,
         };
 
-        // Only add categories if they're provided and not empty
+        // Only add category fields if they have values
+        // Support both new bilingual format and legacy single category field
         if (q.category_en && q.category_en.trim()) {
           questionData.category_en = q.category_en;
+        } else if (q.category && q.category.trim() && !q.category_en) {
+          // Fallback to legacy category field
+          questionData.category = q.category;
         }
+        
         if (q.category_ar && q.category_ar.trim()) {
           questionData.category_ar = q.category_ar;
-        }
-        // Support legacy single category field for backward compatibility
-        if (q.category && q.category.trim() && !q.category_en && !q.category_ar) {
-          questionData.category_en = q.category;
         }
 
         const { data: question, error: questionError } = await supabase
