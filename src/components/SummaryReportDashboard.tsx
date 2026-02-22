@@ -187,7 +187,7 @@ export default function SummaryReportDashboard({
         </div>
       </div>
 
-      {/* Satisfaction Distribution - Horizontal Bars */}
+      {/* Satisfaction Distribution - Vertical Bars */}
       <div className="bg-white border border-gray-200 rounded-lg p-6">
         <h3 className="text-xl font-bold text-gray-800 mb-6">
           {t('admin.satisfactionDistribution')}
@@ -200,25 +200,15 @@ export default function SummaryReportDashboard({
             </p>
           </div>
         ) : (
-          <div className="space-y-5">
+          <div className="flex items-end justify-center gap-6 h-80">
             {/* Very Satisfied (5 stars) */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">😄 {t('survey.verySatisfied')}</span>
-                <span className="text-sm font-bold text-gray-800">
-                  {responses.reduce((count, response) => {
-                    return count + (response.answers?.filter(a => {
-                      const q = questions.find(q => q.id === a.question_id);
-                      return q?.type === 'star_rating' && Number(a.value) === 5;
-                    }).length || 0);
-                  }, 0)} {t('admin.responses')}
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-lg h-8">
+            <div className="flex flex-col items-center">
+              <div className="text-2xl mb-2">😄</div>
+              <div className="relative h-64 w-16 bg-gray-200 rounded-lg overflow-hidden flex items-end justify-center">
                 <div
-                  className="bg-emerald-500 h-8 rounded-lg transition-all duration-300"
+                  className="w-full bg-emerald-500 transition-all duration-300 flex items-center justify-center"
                   style={{
-                    width: `${Math.round(
+                    height: `${Math.round(
                       (responses.reduce((count, response) => {
                         return count + (response.answers?.filter(a => {
                           const q = questions.find(q => q.id === a.question_id);
@@ -227,28 +217,44 @@ export default function SummaryReportDashboard({
                       }, 0) / overallSatisfaction.totalCount) * 100
                     )}%`,
                   }}
-                ></div>
+                >
+                  {Math.round(
+                    (responses.reduce((count, response) => {
+                      return count + (response.answers?.filter(a => {
+                        const q = questions.find(q => q.id === a.question_id);
+                        return q?.type === 'star_rating' && Number(a.value) === 5;
+                      }).length || 0);
+                    }, 0) / overallSatisfaction.totalCount) * 100
+                  ) > 10 && (
+                    <span className="text-xs font-bold text-white">
+                      {Math.round(
+                        (responses.reduce((count, response) => {
+                          return count + (response.answers?.filter(a => {
+                            const q = questions.find(q => q.id === a.question_id);
+                            return q?.type === 'star_rating' && Number(a.value) === 5;
+                          }).length || 0);
+                        }, 0) / overallSatisfaction.totalCount) * 100
+                      )}%
+                    </span>
+                  )}
+                </div>
               </div>
+              <p className="text-xs text-gray-600 mt-2 text-center">{responses.reduce((count, response) => {
+                return count + (response.answers?.filter(a => {
+                  const q = questions.find(q => q.id === a.question_id);
+                  return q?.type === 'star_rating' && Number(a.value) === 5;
+                }).length || 0);
+              }, 0)}</p>
             </div>
 
             {/* Satisfied (4 stars) */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">🙂 {t('survey.satisfied')}</span>
-                <span className="text-sm font-bold text-gray-800">
-                  {responses.reduce((count, response) => {
-                    return count + (response.answers?.filter(a => {
-                      const q = questions.find(q => q.id === a.question_id);
-                      return q?.type === 'star_rating' && Number(a.value) === 4;
-                    }).length || 0);
-                  }, 0)} {t('admin.responses')}
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-lg h-8">
+            <div className="flex flex-col items-center">
+              <div className="text-2xl mb-2">🙂</div>
+              <div className="relative h-64 w-16 bg-gray-200 rounded-lg overflow-hidden flex items-end justify-center">
                 <div
-                  className="bg-green-500 h-8 rounded-lg transition-all duration-300"
+                  className="w-full bg-green-500 transition-all duration-300 flex items-center justify-center"
                   style={{
-                    width: `${Math.round(
+                    height: `${Math.round(
                       (responses.reduce((count, response) => {
                         return count + (response.answers?.filter(a => {
                           const q = questions.find(q => q.id === a.question_id);
@@ -257,28 +263,44 @@ export default function SummaryReportDashboard({
                       }, 0) / overallSatisfaction.totalCount) * 100
                     )}%`,
                   }}
-                ></div>
+                >
+                  {Math.round(
+                    (responses.reduce((count, response) => {
+                      return count + (response.answers?.filter(a => {
+                        const q = questions.find(q => q.id === a.question_id);
+                        return q?.type === 'star_rating' && Number(a.value) === 4;
+                      }).length || 0);
+                    }, 0) / overallSatisfaction.totalCount) * 100
+                  ) > 10 && (
+                    <span className="text-xs font-bold text-white">
+                      {Math.round(
+                        (responses.reduce((count, response) => {
+                          return count + (response.answers?.filter(a => {
+                            const q = questions.find(q => q.id === a.question_id);
+                            return q?.type === 'star_rating' && Number(a.value) === 4;
+                          }).length || 0);
+                        }, 0) / overallSatisfaction.totalCount) * 100
+                      )}%
+                    </span>
+                  )}
+                </div>
               </div>
+              <p className="text-xs text-gray-600 mt-2 text-center">{responses.reduce((count, response) => {
+                return count + (response.answers?.filter(a => {
+                  const q = questions.find(q => q.id === a.question_id);
+                  return q?.type === 'star_rating' && Number(a.value) === 4;
+                }).length || 0);
+              }, 0)}</p>
             </div>
 
             {/* Neutral (3 stars) */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">😐 {t('survey.neutral')}</span>
-                <span className="text-sm font-bold text-gray-800">
-                  {responses.reduce((count, response) => {
-                    return count + (response.answers?.filter(a => {
-                      const q = questions.find(q => q.id === a.question_id);
-                      return q?.type === 'star_rating' && Number(a.value) === 3;
-                    }).length || 0);
-                  }, 0)} {t('admin.responses')}
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-lg h-8">
+            <div className="flex flex-col items-center">
+              <div className="text-2xl mb-2">😐</div>
+              <div className="relative h-64 w-16 bg-gray-200 rounded-lg overflow-hidden flex items-end justify-center">
                 <div
-                  className="bg-yellow-400 h-8 rounded-lg transition-all duration-300"
+                  className="w-full bg-yellow-400 transition-all duration-300 flex items-center justify-center"
                   style={{
-                    width: `${Math.round(
+                    height: `${Math.round(
                       (responses.reduce((count, response) => {
                         return count + (response.answers?.filter(a => {
                           const q = questions.find(q => q.id === a.question_id);
@@ -287,28 +309,44 @@ export default function SummaryReportDashboard({
                       }, 0) / overallSatisfaction.totalCount) * 100
                     )}%`,
                   }}
-                ></div>
+                >
+                  {Math.round(
+                    (responses.reduce((count, response) => {
+                      return count + (response.answers?.filter(a => {
+                        const q = questions.find(q => q.id === a.question_id);
+                        return q?.type === 'star_rating' && Number(a.value) === 3;
+                      }).length || 0);
+                    }, 0) / overallSatisfaction.totalCount) * 100
+                  ) > 10 && (
+                    <span className="text-xs font-bold text-gray-800">
+                      {Math.round(
+                        (responses.reduce((count, response) => {
+                          return count + (response.answers?.filter(a => {
+                            const q = questions.find(q => q.id === a.question_id);
+                            return q?.type === 'star_rating' && Number(a.value) === 3;
+                          }).length || 0);
+                        }, 0) / overallSatisfaction.totalCount) * 100
+                      )}%
+                    </span>
+                  )}
+                </div>
               </div>
+              <p className="text-xs text-gray-600 mt-2 text-center">{responses.reduce((count, response) => {
+                return count + (response.answers?.filter(a => {
+                  const q = questions.find(q => q.id === a.question_id);
+                  return q?.type === 'star_rating' && Number(a.value) === 3;
+                }).length || 0);
+              }, 0)}</p>
             </div>
 
             {/* Dissatisfied (2 stars) */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">😕 {t('survey.dissatisfied')}</span>
-                <span className="text-sm font-bold text-gray-800">
-                  {responses.reduce((count, response) => {
-                    return count + (response.answers?.filter(a => {
-                      const q = questions.find(q => q.id === a.question_id);
-                      return q?.type === 'star_rating' && Number(a.value) === 2;
-                    }).length || 0);
-                  }, 0)} {t('admin.responses')}
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-lg h-8">
+            <div className="flex flex-col items-center">
+              <div className="text-2xl mb-2">😕</div>
+              <div className="relative h-64 w-16 bg-gray-200 rounded-lg overflow-hidden flex items-end justify-center">
                 <div
-                  className="bg-orange-500 h-8 rounded-lg transition-all duration-300"
+                  className="w-full bg-orange-500 transition-all duration-300 flex items-center justify-center"
                   style={{
-                    width: `${Math.round(
+                    height: `${Math.round(
                       (responses.reduce((count, response) => {
                         return count + (response.answers?.filter(a => {
                           const q = questions.find(q => q.id === a.question_id);
@@ -317,28 +355,44 @@ export default function SummaryReportDashboard({
                       }, 0) / overallSatisfaction.totalCount) * 100
                     )}%`,
                   }}
-                ></div>
+                >
+                  {Math.round(
+                    (responses.reduce((count, response) => {
+                      return count + (response.answers?.filter(a => {
+                        const q = questions.find(q => q.id === a.question_id);
+                        return q?.type === 'star_rating' && Number(a.value) === 2;
+                      }).length || 0);
+                    }, 0) / overallSatisfaction.totalCount) * 100
+                  ) > 10 && (
+                    <span className="text-xs font-bold text-white">
+                      {Math.round(
+                        (responses.reduce((count, response) => {
+                          return count + (response.answers?.filter(a => {
+                            const q = questions.find(q => q.id === a.question_id);
+                            return q?.type === 'star_rating' && Number(a.value) === 2;
+                          }).length || 0);
+                        }, 0) / overallSatisfaction.totalCount) * 100
+                      )}%
+                    </span>
+                  )}
+                </div>
               </div>
+              <p className="text-xs text-gray-600 mt-2 text-center">{responses.reduce((count, response) => {
+                return count + (response.answers?.filter(a => {
+                  const q = questions.find(q => q.id === a.question_id);
+                  return q?.type === 'star_rating' && Number(a.value) === 2;
+                }).length || 0);
+              }, 0)}</p>
             </div>
 
             {/* Very Dissatisfied (1 star) */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">😞 {t('survey.veryDissatisfied')}</span>
-                <span className="text-sm font-bold text-gray-800">
-                  {responses.reduce((count, response) => {
-                    return count + (response.answers?.filter(a => {
-                      const q = questions.find(q => q.id === a.question_id);
-                      return q?.type === 'star_rating' && Number(a.value) === 1;
-                    }).length || 0);
-                  }, 0)} {t('admin.responses')}
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-lg h-8">
+            <div className="flex flex-col items-center">
+              <div className="text-2xl mb-2">😞</div>
+              <div className="relative h-64 w-16 bg-gray-200 rounded-lg overflow-hidden flex items-end justify-center">
                 <div
-                  className="bg-red-500 h-8 rounded-lg transition-all duration-300"
+                  className="w-full bg-red-500 transition-all duration-300 flex items-center justify-center"
                   style={{
-                    width: `${Math.round(
+                    height: `${Math.round(
                       (responses.reduce((count, response) => {
                         return count + (response.answers?.filter(a => {
                           const q = questions.find(q => q.id === a.question_id);
@@ -347,8 +401,34 @@ export default function SummaryReportDashboard({
                       }, 0) / overallSatisfaction.totalCount) * 100
                     )}%`,
                   }}
-                ></div>
+                >
+                  {Math.round(
+                    (responses.reduce((count, response) => {
+                      return count + (response.answers?.filter(a => {
+                        const q = questions.find(q => q.id === a.question_id);
+                        return q?.type === 'star_rating' && Number(a.value) === 1;
+                      }).length || 0);
+                    }, 0) / overallSatisfaction.totalCount) * 100
+                  ) > 10 && (
+                    <span className="text-xs font-bold text-white">
+                      {Math.round(
+                        (responses.reduce((count, response) => {
+                          return count + (response.answers?.filter(a => {
+                            const q = questions.find(q => q.id === a.question_id);
+                            return q?.type === 'star_rating' && Number(a.value) === 1;
+                          }).length || 0);
+                        }, 0) / overallSatisfaction.totalCount) * 100
+                      )}%
+                    </span>
+                  )}
+                </div>
               </div>
+              <p className="text-xs text-gray-600 mt-2 text-center">{responses.reduce((count, response) => {
+                return count + (response.answers?.filter(a => {
+                  const q = questions.find(q => q.id === a.question_id);
+                  return q?.type === 'star_rating' && Number(a.value) === 1;
+                }).length || 0);
+              }, 0)}</p>
             </div>
           </div>
         )}
