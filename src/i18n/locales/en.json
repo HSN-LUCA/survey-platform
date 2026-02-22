@@ -108,6 +108,7 @@
   },
   "admin": {
     "dashboard": "Admin Dashboard",
+    "analyticsOverview": "Dashboard",
     "login": "Admin Login",
     "logout": "Logout",
     "email": "Email",
@@ -121,6 +122,7 @@
     "analytics": "Analytics",
     "settings": "Settings",
     "profile": "Profile",
+    "questions": "Questions",
     "createNewSurvey": "Create New Survey",
     "editSurvey": "Edit Survey",
     "surveyTitle": "Survey Title",

@@ -366,7 +366,7 @@ export default function CreateSurveyPage() {
               <div className="flex items-center gap-3">
                 <div className="w-1 h-8 bg-gradient-to-b from-yellow-600 to-yellow-700 rounded"></div>
                 <h2 className="text-2xl font-bold text-gray-800">
-                  {isRTL ? 'الأسئلة' : 'Questions'}
+                  {t('admin.questions')}
                 </h2>
               </div>
               <button
