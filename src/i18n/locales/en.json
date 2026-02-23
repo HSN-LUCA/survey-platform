@@ -200,7 +200,18 @@
     "demographicBreakdown": "Demographic Breakdown",
     "exportPDF": "Export as PDF",
     "exportCSV": "Export as CSV",
-    "printReport": "Print Report"
+    "printReport": "Print Report",
+    "realTimeDashboard": "Real-time Dashboard",
+    "lowScoringArea": "Low Scoring Area",
+    "aiInsight": "AI Insight",
+    "topPerforming": "Top Performing",
+    "excellent": "Excellent",
+    "good": "Good",
+    "neutral": "Neutral",
+    "poor": "Poor",
+    "vsSurvey": "vs Previous Survey",
+    "noDataAvailable": "No data available",
+    "aiInsightMessage": "Customer satisfaction improved by {{percentage}}% driven by improved service delivery across all departments."
   },
   "validation": {
     "required": "This field is required",

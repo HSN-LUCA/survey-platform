@@ -428,10 +428,7 @@ export default function AnalyticsPage() {
                   <span className="text-2xl">🤖</span>
                 </div>
                 <p className="text-sm text-gray-800 leading-relaxed">
-                  {isRTL 
-                    ? `تحسن رضا العملاء بنسبة ${avgSatisfaction > 70 ? '4%' : '2%'} بسبب تحسن جودة الخدمة في جميع الأقسام.`
-                    : `Customer satisfaction improved by ${avgSatisfaction > 70 ? '4%' : '2%'} driven by improved service delivery across all departments.`
-                  }
+                  {t('admin.aiInsightMessage', { percentage: avgSatisfaction > 70 ? '4' : '2' })}
                 </p>
               </div>
 
