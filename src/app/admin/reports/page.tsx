@@ -269,49 +269,83 @@ export default function ReportsPage() {
             </div>
 
             {/* Demographic Breakdown */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">{t('admin.demographicBreakdown')}</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Gender */}
-                <div>
-                  <h4 className="font-semibold text-gray-700 mb-3">{t('survey.gender')}</h4>
-                  <div className="space-y-2">
-                    {Object.entries(currentReport.demographics.gender).map(([key, value]) => (
-                      <div key={key} className="flex justify-between items-center">
-                        <span className="text-gray-600">{key}</span>
-                        <span className="font-semibold text-gray-800">{value}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Age Range */}
-                <div>
-                  <h4 className="font-semibold text-gray-700 mb-3">{t('survey.ageRange')}</h4>
-                  <div className="space-y-2">
-                    {Object.entries(currentReport.demographics.ageRange).map(([key, value]) => (
-                      <div key={key} className="flex justify-between items-center">
-                        <span className="text-gray-600">{key}</span>
-                        <span className="font-semibold text-gray-800">{value}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Nationality */}
-                <div>
-                  <h4 className="font-semibold text-gray-700 mb-3">{t('survey.nationality')}</h4>
-                  <div className="space-y-2 max-h-48 overflow-y-auto">
-                    {Object.entries(currentReport.demographics.nationality)
-                      .sort((a, b) => b[1] - a[1])
-                      .slice(0, 10)
-                      .map(([key, value]) => (
-                        <div key={key} className="flex justify-between items-center">
-                          <span className="text-gray-600 text-sm">{key}</span>
-                          <span className="font-semibold text-gray-800">{value}</span>
+            <div className="bg-white rounded-lg shadow p-6 space-y-8">
+              <h3 className="text-lg font-bold text-gray-800">{t('admin.demographicBreakdown')}</h3>
+              
+              {/* Gender Line Chart */}
+              <div>
+                <h4 className="font-semibold text-gray-700 mb-4">{t('survey.gender')}</h4>
+                <div className="flex items-end justify-center gap-8 h-64 p-4 bg-gray-50 rounded-lg">
+                  {Object.entries(currentReport.demographics.gender).map(([key, value]) => {
+                    const maxValue = Math.max(...Object.values(currentReport.demographics.gender) as number[]);
+                    const heightPercent = (value / maxValue) * 100;
+                    return (
+                      <div key={key} className="flex flex-col items-center gap-2">
+                        <div className="flex items-end gap-1">
+                          <div
+                            className="bg-blue-500 rounded-t-lg transition-all hover:bg-blue-600"
+                            style={{ width: '40px', height: `${heightPercent * 2}px` }}
+                          ></div>
                         </div>
-                      ))}
-                  </div>
+                        <span className="text-sm font-medium text-gray-700">{key}</span>
+                        <span className="text-xs text-gray-600">{value}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Age Range Line Chart */}
+              <div>
+                <h4 className="font-semibold text-gray-700 mb-4">{t('survey.ageRange')}</h4>
+                <div className="flex items-end justify-center gap-6 h-64 p-4 bg-gray-50 rounded-lg overflow-x-auto">
+                  {Object.entries(currentReport.demographics.ageRange).map(([key, value]) => {
+                    const maxValue = Math.max(...Object.values(currentReport.demographics.ageRange) as number[]);
+                    const heightPercent = (value / maxValue) * 100;
+                    return (
+                      <div key={key} className="flex flex-col items-center gap-2 flex-shrink-0">
+                        <div className="flex items-end gap-1">
+                          <div
+                            className="bg-green-500 rounded-t-lg transition-all hover:bg-green-600"
+                            style={{ width: '40px', height: `${heightPercent * 2}px` }}
+                          ></div>
+                        </div>
+                        <span className="text-xs font-medium text-gray-700 text-center">{key}</span>
+                        <span className="text-xs text-gray-600">{value}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Nationality Table */}
+              <div>
+                <h4 className="font-semibold text-gray-700 mb-4">{t('survey.nationality')}</h4>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-100 border-b-2 border-gray-300">
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">{t('survey.nationality')}</th>
+                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">{t('admin.totalResponses')}</th>
+                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">%</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(currentReport.demographics.nationality)
+                        .sort((a, b) => b[1] - a[1])
+                        .map(([key, value], idx) => {
+                          const total = Object.values(currentReport.demographics.nationality).reduce((a, b) => a + b, 0);
+                          const percentage = ((value / total) * 100).toFixed(1);
+                          return (
+                            <tr key={key} className={`border-b border-gray-200 ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100`}>
+                              <td className="px-4 py-3 text-sm text-gray-700">{key}</td>
+                              <td className="px-4 py-3 text-sm text-right text-gray-700 font-medium">{value}</td>
+                              <td className="px-4 py-3 text-sm text-right text-gray-700 font-medium">{percentage}%</td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
