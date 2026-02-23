@@ -193,8 +193,8 @@ export default function AnalyticsPage() {
               <div>
                 <p className="text-gray-600 text-xs md:text-sm font-medium">{t('admin.responseRate')}</p>
                 <p className="text-2xl md:text-3xl font-bold text-gray-800 mt-2">
-                  {data && data.totalSurveys > 0
-                    ? Math.round((data.totalResponses / (data.totalSurveys * 10)) * 100)
+                  {data && data.totalResponses > 0
+                    ? Math.round((data.totalSurveys / data.totalResponses) * 100)
                     : 0}
                   %
                 </p>
