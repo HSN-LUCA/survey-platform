@@ -200,19 +200,19 @@ export default function SurveyList() {
           <table className="w-full border-collapse" style={{ tableLayout: 'fixed' }}>
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-3 py-3 text-sm font-semibold text-gray-700 text-left" style={{ width: '35%' }}>
+                <th className="px-3 py-3 text-sm font-semibold text-gray-700" style={{ width: '35%', textAlign: isRTL ? 'right' : 'left' }}>
                   {t('survey.title')}
                 </th>
-                <th className="px-3 py-3 text-sm font-semibold text-gray-700 text-left" style={{ width: '15%' }}>
+                <th className="px-3 py-3 text-sm font-semibold text-gray-700" style={{ width: '15%', textAlign: isRTL ? 'right' : 'left' }}>
                   {t('survey.customerType')}
                 </th>
-                <th className="px-3 py-3 text-sm font-semibold text-gray-700 text-center" style={{ width: '12%' }}>
+                <th className="px-3 py-3 text-sm font-semibold text-gray-700" style={{ width: '12%', textAlign: 'center' }}>
                   {t('admin.totalResponses')}
                 </th>
-                <th className="px-3 py-3 text-sm font-semibold text-gray-700 text-left" style={{ width: '13%' }}>
+                <th className="px-3 py-3 text-sm font-semibold text-gray-700" style={{ width: '13%', textAlign: isRTL ? 'right' : 'left' }}>
                   {t('common.date')}
                 </th>
-                <th className="px-3 py-3 text-sm font-semibold text-gray-700 text-right" style={{ width: '25%' }}>
+                <th className="px-3 py-3 text-sm font-semibold text-gray-700" style={{ width: '25%', textAlign: isRTL ? 'left' : 'right' }}>
                   {t('common.options')}
                 </th>
               </tr>
@@ -220,7 +220,7 @@ export default function SurveyList() {
             <tbody className="divide-y divide-gray-200">
               {surveys.map((survey) => (
                 <tr key={survey.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-3 py-4 text-sm" style={{ width: '35%', wordBreak: 'break-word' }}>
+                  <td className="px-3 py-4 text-sm" style={{ width: '35%', wordBreak: 'break-word', textAlign: isRTL ? 'right' : 'left' }}>
                     <div>
                       <p className="font-medium text-gray-900 line-clamp-2">
                         {isRTL ? survey.title_ar : survey.title_en}
@@ -230,22 +230,22 @@ export default function SurveyList() {
                       </p>
                     </div>
                   </td>
-                  <td className="px-3 py-4 text-sm" style={{ width: '15%' }}>
+                  <td className="px-3 py-4 text-sm" style={{ width: '15%', textAlign: isRTL ? 'right' : 'left' }}>
                     <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 whitespace-nowrap">
                       {survey.customer_type === 'pilgrims'
                         ? t('survey.pilgrims')
                         : t('survey.staff')}
                     </span>
                   </td>
-                  <td className="px-3 py-4 text-sm text-gray-900 font-medium text-center" style={{ width: '12%' }}>
+                  <td className="px-3 py-4 text-sm text-gray-900 font-medium" style={{ width: '12%', textAlign: 'center' }}>
                     {survey.response_count || 0}
                   </td>
-                  <td className="px-3 py-4 text-sm text-gray-600" style={{ width: '13%', whiteSpace: 'nowrap' }}>
+                  <td className="px-3 py-4 text-sm text-gray-600" style={{ width: '13%', whiteSpace: 'nowrap', textAlign: isRTL ? 'right' : 'left' }}>
                     {new Date(survey.created_at).toLocaleDateString(
                       isRTL ? 'ar-SA' : 'en-US'
                     )}
                   </td>
-                  <td className="px-3 py-4 text-right" style={{ width: '25%' }}>
+                  <td className="px-3 py-4" style={{ width: '25%', textAlign: isRTL ? 'left' : 'right' }}>
                     <div className="flex gap-1 justify-end flex-wrap">
                       <Link
                         href={`/admin/surveys/${survey.id}/edit`}
