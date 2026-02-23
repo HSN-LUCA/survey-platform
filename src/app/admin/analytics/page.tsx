@@ -152,8 +152,8 @@ export default function AnalyticsPage() {
   const calculateResponseRate = (): number => {
     if (!data || data.totalResponses === 0) return 0;
     // Response Rate = (Number of Surveys Sent / Number of Responses Received) × 100
-    const surveySent = Math.max(data.totalSurveys * 10, 1);
-    return Math.round((surveySent / data.totalResponses) * 100);
+    // If we have 8 surveys and 80 responses: (8 / 80) × 100 = 10%
+    return Math.round((data.totalSurveys / data.totalResponses) * 100);
   };
 
   const getLowestScoringQuestion = (): SurveyStats | null => {
