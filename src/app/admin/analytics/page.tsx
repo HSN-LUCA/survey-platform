@@ -200,26 +200,28 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Date Range Filter */}
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-          <h2 className="text-sm font-semibold text-gray-700 mb-4">{t('admin.dateRangeLabel')}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-2">{t('admin.from')}</label>
-              <input
-                type="date"
-                value={fromDate}
-                onChange={(e) => setFromDate(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 text-gray-900 text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-2">{t('admin.to')}</label>
-              <input
-                type="date"
-                value={toDate}
-                onChange={(e) => setToDate(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 text-gray-900 text-sm"
-              />
+        <div className="bg-white rounded-lg shadow-sm p-3 md:p-4 border border-gray-100">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-3">
+            <label className="text-xs font-medium text-gray-600 whitespace-nowrap">{t('admin.dateRangeLabel')}:</label>
+            <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-gray-600 hidden sm:inline">{t('admin.from')}</span>
+                <input
+                  type="date"
+                  value={fromDate}
+                  onChange={(e) => setFromDate(e.target.value)}
+                  className="px-2 py-1 border border-gray-200 rounded text-gray-900 text-xs focus:outline-none focus:border-blue-500"
+                />
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-gray-600 hidden sm:inline">{t('admin.to')}</span>
+                <input
+                  type="date"
+                  value={toDate}
+                  onChange={(e) => setToDate(e.target.value)}
+                  className="px-2 py-1 border border-gray-200 rounded text-gray-900 text-xs focus:outline-none focus:border-blue-500"
+                />
+              </div>
             </div>
           </div>
         </div>
