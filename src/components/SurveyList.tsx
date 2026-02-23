@@ -197,22 +197,22 @@ export default function SurveyList() {
         </div>
       ) : (
         <div className={`bg-white rounded-lg shadow overflow-x-auto ${isRTL ? 'rtl' : 'ltr'}`}>
-          <table className="w-full border-collapse">
+          <table className="w-full border-collapse" style={{ tableLayout: 'fixed' }}>
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-4 py-3 text-sm font-semibold text-gray-700 text-left min-w-[200px]">
+                <th className="px-3 py-3 text-sm font-semibold text-gray-700 text-left" style={{ width: '35%' }}>
                   {t('survey.title')}
                 </th>
-                <th className="px-4 py-3 text-sm font-semibold text-gray-700 text-left min-w-[120px]">
+                <th className="px-3 py-3 text-sm font-semibold text-gray-700 text-left" style={{ width: '15%' }}>
                   {t('survey.customerType')}
                 </th>
-                <th className="px-4 py-3 text-sm font-semibold text-gray-700 text-center min-w-[100px]">
+                <th className="px-3 py-3 text-sm font-semibold text-gray-700 text-center" style={{ width: '12%' }}>
                   {t('admin.totalResponses')}
                 </th>
-                <th className="px-4 py-3 text-sm font-semibold text-gray-700 text-left min-w-[100px]">
+                <th className="px-3 py-3 text-sm font-semibold text-gray-700 text-left" style={{ width: '13%' }}>
                   {t('common.date')}
                 </th>
-                <th className="px-4 py-3 text-sm font-semibold text-gray-700 text-right min-w-[200px]">
+                <th className="px-3 py-3 text-sm font-semibold text-gray-700 text-right" style={{ width: '25%' }}>
                   {t('common.options')}
                 </th>
               </tr>
@@ -220,50 +220,52 @@ export default function SurveyList() {
             <tbody className="divide-y divide-gray-200">
               {surveys.map((survey) => (
                 <tr key={survey.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-4 py-4 min-w-[200px]">
+                  <td className="px-3 py-4 text-sm" style={{ width: '35%', wordBreak: 'break-word' }}>
                     <div>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium text-gray-900 line-clamp-2">
                         {isRTL ? survey.title_ar : survey.title_en}
                       </p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-xs text-gray-600 line-clamp-1">
                         {isRTL ? survey.description_ar : survey.description_en}
                       </p>
                     </div>
                   </td>
-                  <td className="px-4 py-4 min-w-[120px]">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                  <td className="px-3 py-4 text-sm" style={{ width: '15%' }}>
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 whitespace-nowrap">
                       {survey.customer_type === 'pilgrims'
                         ? t('survey.pilgrims')
                         : t('survey.staff')}
                     </span>
                   </td>
-                  <td className="px-4 py-4 text-gray-900 font-medium text-center min-w-[100px]">
+                  <td className="px-3 py-4 text-sm text-gray-900 font-medium text-center" style={{ width: '12%' }}>
                     {survey.response_count || 0}
                   </td>
-                  <td className="px-4 py-4 text-sm text-gray-600 min-w-[100px]">
+                  <td className="px-3 py-4 text-sm text-gray-600" style={{ width: '13%', whiteSpace: 'nowrap' }}>
                     {new Date(survey.created_at).toLocaleDateString(
                       isRTL ? 'ar-SA' : 'en-US'
                     )}
                   </td>
-                  <td className="px-4 py-4 text-right space-x-2 min-w-[200px]">
-                    <Link
-                      href={`/admin/surveys/${survey.id}/edit`}
-                      className="inline-block px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
-                    >
-                      {t('admin.editSurvey')}
-                    </Link>
-                    <Link
-                      href={`/admin/surveys/${survey.id}`}
-                      className="inline-block px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
-                    >
-                      {t('survey.viewSurvey')}
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(survey.id)}
-                      className="inline-block px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
-                    >
-                      {t('common.delete')}
-                    </button>
+                  <td className="px-3 py-4 text-right" style={{ width: '25%' }}>
+                    <div className="flex gap-1 justify-end flex-wrap">
+                      <Link
+                        href={`/admin/surveys/${survey.id}/edit`}
+                        className="inline-block px-2 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors whitespace-nowrap"
+                      >
+                        {t('admin.editSurvey')}
+                      </Link>
+                      <Link
+                        href={`/admin/surveys/${survey.id}`}
+                        className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors whitespace-nowrap"
+                      >
+                        {t('survey.viewSurvey')}
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(survey.id)}
+                        className="inline-block px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors whitespace-nowrap"
+                      >
+                        {t('common.delete')}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
