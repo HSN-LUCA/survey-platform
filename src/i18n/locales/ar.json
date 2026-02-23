@@ -190,7 +190,7 @@
     "satisfactionDistribution": "توزيع الرضا",
     "cloneSurvey": "استنساخ الاستبيان",
     "cloneSurveySuccess": "تم استنساخ الاستبيان بنجاح",
-    "surveyPerformance": "التفاعل مع الاستبيان"
+    "surveyPerformance": "متوسط رضا الاستبيان"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
