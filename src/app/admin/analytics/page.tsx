@@ -34,7 +34,7 @@ interface AnalyticsData {
 interface KPICardProps {
   label: string;
   value: string | number;
-  trend?: { direction: 'up' | 'down'; percentage: number };
+  trend?: { direction: 'up' | 'down'; percentage: number; label: string };
   accentColor: 'green' | 'blue' | 'purple' | 'orange';
   icon?: string;
 }
@@ -62,7 +62,7 @@ function KPICard({ label, value, trend, accentColor, icon }: KPICardProps) {
           {trend && (
             <div className={`flex items-center gap-1 mt-3 ${trendColors[trend.direction]}`}>
               <span className="text-lg">{trend.direction === 'up' ? '↑' : '↓'}</span>
-              <span className="text-sm font-semibold">{trend.percentage}% vs Last Survey</span>
+              <span className="text-sm font-semibold">{trend.percentage}% {trend.label}</span>
             </div>
           )}
         </div>
@@ -151,7 +151,9 @@ export default function AnalyticsPage() {
 
   const calculateResponseRate = (): number => {
     if (!data || data.totalResponses === 0) return 0;
-    return Math.round((data.totalResponses / Math.max(data.totalSurveys * 10, 1)) * 100);
+    // Response Rate = (Number of Surveys Sent / Number of Responses Received) × 100
+    const surveySent = Math.max(data.totalSurveys * 10, 1);
+    return Math.round((surveySent / data.totalResponses) * 100);
   };
 
   const getLowestScoringQuestion = (): SurveyStats | null => {
@@ -193,7 +195,7 @@ export default function AnalyticsPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">{t('admin.analyticsOverview')}</h1>
-            <p className="text-gray-600 text-sm mt-1">Real-time dashboard overview</p>
+            <p className="text-gray-600 text-sm mt-1">{t('admin.realTimeDashboard')}</p>
           </div>
         </div>
 
@@ -234,14 +236,14 @@ export default function AnalyticsPage() {
           <KPICard
             label={t('admin.satisfactionRate')}
             value={`${avgSatisfaction}%`}
-            trend={{ direction: 'up', percentage: 3 }}
+            trend={{ direction: 'up', percentage: 3, label: t('admin.vsSurvey') }}
             accentColor="green"
             icon="😊"
           />
           <KPICard
             label={t('admin.responseRate')}
             value={`${responseRate}%`}
-            trend={{ direction: 'down', percentage: 2 }}
+            trend={{ direction: 'down', percentage: 2, label: t('admin.vsSurvey') }}
             accentColor="blue"
             icon="📊"
           />
@@ -252,7 +254,7 @@ export default function AnalyticsPage() {
             icon="📝"
           />
           <KPICard
-            label={t('admin.activeSurveys')}
+            label={t('admin.totalSurveys')}
             value={data?.totalSurveys || 0}
             accentColor="orange"
             icon="📋"
@@ -330,19 +332,19 @@ export default function AnalyticsPage() {
                   <div className="flex-1 space-y-3">
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                      <span className="text-sm text-gray-700">Excellent {data.satisfactionDistribution?.verySatisfied || 0}%</span>
+                      <span className="text-sm text-gray-700">{t('admin.excellent')} {data.satisfactionDistribution?.verySatisfied || 0}%</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                      <span className="text-sm text-gray-700">Good {data.satisfactionDistribution?.satisfied || 0}%</span>
+                      <span className="text-sm text-gray-700">{t('admin.good')} {data.satisfactionDistribution?.satisfied || 0}%</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-                      <span className="text-sm text-gray-700">Neutral {data.satisfactionDistribution?.neutral || 0}%</span>
+                      <span className="text-sm text-gray-700">{t('admin.neutral')} {data.satisfactionDistribution?.neutral || 0}%</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                      <span className="text-sm text-gray-700">Poor {data.satisfactionDistribution?.dissatisfied || 0}%</span>
+                      <span className="text-sm text-gray-700">{t('admin.poor')} {data.satisfactionDistribution?.dissatisfied || 0}%</span>
                     </div>
                   </div>
                 </div>
@@ -406,25 +408,28 @@ export default function AnalyticsPage() {
               {lowestScoring && (
                 <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-red-500 border border-gray-100">
                   <div className="flex items-start justify-between mb-4">
-                    <h3 className="text-sm font-semibold text-gray-700">Low Scoring Area</h3>
+                    <h3 className="text-sm font-semibold text-gray-700">{t('admin.lowScoringArea')}</h3>
                     <span className="text-2xl">⚠️</span>
                   </div>
                   <p className="text-gray-900 font-semibold mb-2 line-clamp-2">
                     {isRTL ? lowestScoring.title_ar : lowestScoring.title_en}
                   </p>
                   <p className="text-2xl font-bold text-red-600">{lowestScoring.satisfaction_score}%</p>
-                  <p className="text-xs text-gray-500 mt-2">Satisfaction</p>
+                  <p className="text-xs text-gray-500 mt-2">{t('admin.satisfactionRate')}</p>
                 </div>
               )}
 
               {/* AI Insight */}
               <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm p-6 border border-blue-200">
                 <div className="flex items-start justify-between mb-4">
-                  <h3 className="text-sm font-semibold text-gray-700">AI Insight</h3>
+                  <h3 className="text-sm font-semibold text-gray-700">{t('admin.aiInsight')}</h3>
                   <span className="text-2xl">🤖</span>
                 </div>
                 <p className="text-sm text-gray-800 leading-relaxed">
-                  Customer satisfaction improved by {avgSatisfaction > 70 ? '4%' : '2%'} driven by improved service delivery across all departments.
+                  {isRTL 
+                    ? `تحسن رضا العملاء بنسبة ${avgSatisfaction > 70 ? '4%' : '2%'} بسبب تحسن جودة الخدمة في جميع الأقسام.`
+                    : `Customer satisfaction improved by ${avgSatisfaction > 70 ? '4%' : '2%'} driven by improved service delivery across all departments.`
+                  }
                 </p>
               </div>
 
@@ -432,14 +437,14 @@ export default function AnalyticsPage() {
               {highestScoring && (
                 <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500 border border-gray-100">
                   <div className="flex items-start justify-between mb-4">
-                    <h3 className="text-sm font-semibold text-gray-700">Top Performing</h3>
+                    <h3 className="text-sm font-semibold text-gray-700">{t('admin.topPerforming')}</h3>
                     <span className="text-2xl">⭐</span>
                   </div>
                   <p className="text-gray-900 font-semibold mb-2 line-clamp-2">
                     {isRTL ? highestScoring.title_ar : highestScoring.title_en}
                   </p>
                   <p className="text-2xl font-bold text-green-600">{highestScoring.satisfaction_score}%</p>
-                  <p className="text-xs text-gray-500 mt-2">Satisfaction</p>
+                  <p className="text-xs text-gray-500 mt-2">{t('admin.satisfactionRate')}</p>
                 </div>
               )}
             </div>
@@ -477,7 +482,7 @@ export default function AnalyticsPage() {
 
                         <div className="flex items-center justify-between mb-3">
                           <span className={`text-2xl font-bold ${colors.text}`}>{satisfactionScore}%</span>
-                          <span className="text-xs font-medium text-gray-600">{survey.response_count} responses</span>
+                          <span className="text-xs font-medium text-gray-600">{survey.response_count} {t('admin.responses')}</span>
                         </div>
 
                         <p className="text-xs text-gray-500">

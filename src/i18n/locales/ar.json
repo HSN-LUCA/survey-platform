@@ -202,7 +202,16 @@
     "demographicBreakdown": "توزيع ديموغرافي",
     "exportPDF": "تصدير كـ PDF",
     "exportCSV": "تصدير CSV",
-    "printReport": "طباعة التقرير"
+    "printReport": "طباعة التقرير",
+    "realTimeDashboard": "لوحة تحكم فورية",
+    "lowScoringArea": "منطقة منخفضة التقييم",
+    "aiInsight": "رؤية ذكية",
+    "topPerforming": "الأداء الأفضل",
+    "excellent": "ممتاز",
+    "good": "جيد",
+    "neutral": "محايد",
+    "poor": "ضعيف",
+    "vsSurvey": "مقابل الاستبيان السابق"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
