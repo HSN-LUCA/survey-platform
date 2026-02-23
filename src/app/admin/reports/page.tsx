@@ -50,6 +50,33 @@ export default function ReportsPage() {
     }
   }, [token]);
 
+  useEffect(() => {
+    // Add print styles
+    const style = document.createElement('style');
+    style.textContent = `
+      @media print {
+        aside,
+        nav,
+        .no-print {
+          display: none !important;
+        }
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        main {
+          width: 100%;
+          margin: 0;
+          padding: 20px;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   const fetchReports = async () => {
     try {
       setLoading(true);
@@ -110,8 +137,20 @@ export default function ReportsPage() {
       ],
     ];
 
-    const csv = [headers, ...rows].map((row) => row.join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
+    // Escape CSV values and handle special characters
+    const escapeCSV = (value: any) => {
+      const stringValue = String(value);
+      if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+        return `"${stringValue.replace(/"/g, '""')}"`;
+      }
+      return stringValue;
+    };
+
+    const csv = [headers, ...rows].map((row) => row.map(escapeCSV).join(',')).join('\n');
+    
+    // Add UTF-8 BOM for proper Arabic encoding in Excel
+    const BOM = '\uFEFF';
+    const blob = new Blob([BOM + csv], { type: 'text/csv;charset=utf-8;' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -272,49 +311,61 @@ export default function ReportsPage() {
             <div className="bg-white rounded-lg shadow p-6 space-y-8">
               <h3 className="text-lg font-bold text-gray-800">{t('admin.demographicBreakdown')}</h3>
               
-              {/* Gender Line Chart */}
+              {/* Gender Table */}
               <div>
                 <h4 className="font-semibold text-gray-700 mb-4">{t('survey.gender')}</h4>
-                <div className="flex items-end justify-center gap-8 h-64 p-4 bg-gray-50 rounded-lg">
-                  {Object.entries(currentReport.demographics.gender).map(([key, value]) => {
-                    const maxValue = Math.max(...Object.values(currentReport.demographics.gender) as number[]);
-                    const heightPercent = (value / maxValue) * 100;
-                    return (
-                      <div key={key} className="flex flex-col items-center gap-2">
-                        <div className="flex items-end gap-1">
-                          <div
-                            className="bg-blue-500 rounded-t-lg transition-all hover:bg-blue-600"
-                            style={{ width: '40px', height: `${heightPercent * 2}px` }}
-                          ></div>
-                        </div>
-                        <span className="text-sm font-medium text-gray-700">{key}</span>
-                        <span className="text-xs text-gray-600">{value}</span>
-                      </div>
-                    );
-                  })}
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-100 border-b-2 border-gray-300">
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">{t('survey.gender')}</th>
+                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">{t('admin.totalResponses')}</th>
+                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">%</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(currentReport.demographics.gender).map(([key, value], idx) => {
+                        const total = Object.values(currentReport.demographics.gender).reduce((a, b) => a + b, 0);
+                        const percentage = ((value / total) * 100).toFixed(1);
+                        return (
+                          <tr key={key} className={`border-b border-gray-200 ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100`}>
+                            <td className="px-4 py-3 text-sm text-gray-700">{key}</td>
+                            <td className="px-4 py-3 text-sm text-right text-gray-700 font-medium">{value}</td>
+                            <td className="px-4 py-3 text-sm text-right text-gray-700 font-medium">{percentage}%</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               </div>
 
-              {/* Age Range Line Chart */}
+              {/* Age Range Table */}
               <div>
                 <h4 className="font-semibold text-gray-700 mb-4">{t('survey.ageRange')}</h4>
-                <div className="flex items-end justify-center gap-6 h-64 p-4 bg-gray-50 rounded-lg overflow-x-auto">
-                  {Object.entries(currentReport.demographics.ageRange).map(([key, value]) => {
-                    const maxValue = Math.max(...Object.values(currentReport.demographics.ageRange) as number[]);
-                    const heightPercent = (value / maxValue) * 100;
-                    return (
-                      <div key={key} className="flex flex-col items-center gap-2 flex-shrink-0">
-                        <div className="flex items-end gap-1">
-                          <div
-                            className="bg-green-500 rounded-t-lg transition-all hover:bg-green-600"
-                            style={{ width: '40px', height: `${heightPercent * 2}px` }}
-                          ></div>
-                        </div>
-                        <span className="text-xs font-medium text-gray-700 text-center">{key}</span>
-                        <span className="text-xs text-gray-600">{value}</span>
-                      </div>
-                    );
-                  })}
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-100 border-b-2 border-gray-300">
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">{t('survey.ageRange')}</th>
+                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">{t('admin.totalResponses')}</th>
+                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">%</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(currentReport.demographics.ageRange).map(([key, value], idx) => {
+                        const total = Object.values(currentReport.demographics.ageRange).reduce((a, b) => a + b, 0);
+                        const percentage = ((value / total) * 100).toFixed(1);
+                        return (
+                          <tr key={key} className={`border-b border-gray-200 ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100`}>
+                            <td className="px-4 py-3 text-sm text-gray-700">{key}</td>
+                            <td className="px-4 py-3 text-sm text-right text-gray-700 font-medium">{value}</td>
+                            <td className="px-4 py-3 text-sm text-right text-gray-700 font-medium">{percentage}%</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               </div>
 
