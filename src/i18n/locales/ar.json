@@ -118,6 +118,7 @@
     "unauthorized": "وصول غير مصرح به",
     "surveys": "الاستبيانات",
     "respondents": "المستجيبون",
+    "reports": "التقارير",
     "analytics": "التحليلات",
     "analyticsOverview": "لوحة التحكم",
     "settings": "الإعدادات",
@@ -190,7 +191,18 @@
     "satisfactionDistribution": "توزيع الرضا",
     "cloneSurvey": "استنساخ الاستبيان",
     "cloneSurveySuccess": "تم استنساخ الاستبيان بنجاح",
-    "surveyPerformance": "متوسط رضا الاستبيان"
+    "surveyPerformance": "متوسط رضا الاستبيان",
+    "executiveSummary": "الملخص التنفيذي",
+    "totalInvitationsSent": "إجمالي الدعوات المرسلة",
+    "completionRate": "معدل الإكمال",
+    "satisfactionRate": "معدل الرضا",
+    "answerRate": "معدل الإجابة",
+    "topStrengths": "أفضل 3 نقاط قوة",
+    "bottomImprovements": "أفضل 3 مجالات للتحسين",
+    "demographicBreakdown": "توزيع ديموغرافي",
+    "exportPDF": "تصدير كـ PDF",
+    "exportCSV": "تصدير CSV",
+    "printReport": "طباعة التقرير"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",

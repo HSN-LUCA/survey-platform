@@ -119,6 +119,7 @@
     "unauthorized": "Unauthorized access",
     "surveys": "Surveys",
     "respondents": "Respondents",
+    "reports": "Reports",
     "analytics": "Analytics",
     "settings": "Settings",
     "profile": "Profile",
@@ -188,7 +189,18 @@
     "satisfactionDistribution": "Satisfaction Distribution",
     "cloneSurvey": "Clone Survey",
     "cloneSurveySuccess": "Survey cloned successfully",
-    "surveyPerformance": "Survey Engagement"
+    "surveyPerformance": "Survey Engagement",
+    "executiveSummary": "Executive Summary",
+    "totalInvitationsSent": "Total Invitations Sent",
+    "completionRate": "Completion Rate",
+    "satisfactionRate": "Satisfaction Rate",
+    "answerRate": "Answer Rate",
+    "topStrengths": "Top 3 Strength Areas",
+    "bottomImprovements": "Bottom 3 Improvement Areas",
+    "demographicBreakdown": "Demographic Breakdown",
+    "exportPDF": "Export as PDF",
+    "exportCSV": "Export as CSV",
+    "printReport": "Print Report"
   },
   "validation": {
     "required": "This field is required",
