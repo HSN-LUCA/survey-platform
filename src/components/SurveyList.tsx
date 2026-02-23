@@ -196,23 +196,23 @@ export default function SurveyList() {
           <p className="text-gray-600 text-lg">{t('survey.noSurveys')}</p>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="w-full">
+        <div className={`bg-white rounded-lg shadow overflow-x-auto ${isRTL ? 'rtl' : 'ltr'}`}>
+          <table className="w-full border-collapse">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                <th className="px-4 py-3 text-sm font-semibold text-gray-700 text-left min-w-[200px]">
                   {t('survey.title')}
                 </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                <th className="px-4 py-3 text-sm font-semibold text-gray-700 text-left min-w-[120px]">
                   {t('survey.customerType')}
                 </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                <th className="px-4 py-3 text-sm font-semibold text-gray-700 text-center min-w-[100px]">
                   {t('admin.totalResponses')}
                 </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                <th className="px-4 py-3 text-sm font-semibold text-gray-700 text-left min-w-[100px]">
                   {t('common.date')}
                 </th>
-                <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">
+                <th className="px-4 py-3 text-sm font-semibold text-gray-700 text-right min-w-[200px]">
                   {t('common.options')}
                 </th>
               </tr>
@@ -220,7 +220,7 @@ export default function SurveyList() {
             <tbody className="divide-y divide-gray-200">
               {surveys.map((survey) => (
                 <tr key={survey.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-4 min-w-[200px]">
                     <div>
                       <p className="font-medium text-gray-900">
                         {isRTL ? survey.title_ar : survey.title_en}
@@ -230,22 +230,22 @@ export default function SurveyList() {
                       </p>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-4 min-w-[120px]">
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
                       {survey.customer_type === 'pilgrims'
                         ? t('survey.pilgrims')
                         : t('survey.staff')}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-gray-900 font-medium">
+                  <td className="px-4 py-4 text-gray-900 font-medium text-center min-w-[100px]">
                     {survey.response_count || 0}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-4 py-4 text-sm text-gray-600 min-w-[100px]">
                     {new Date(survey.created_at).toLocaleDateString(
                       isRTL ? 'ar-SA' : 'en-US'
                     )}
                   </td>
-                  <td className="px-6 py-4 text-right space-x-2">
+                  <td className="px-4 py-4 text-right space-x-2 min-w-[200px]">
                     <Link
                       href={`/admin/surveys/${survey.id}/edit`}
                       className="inline-block px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
