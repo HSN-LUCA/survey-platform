@@ -1,11 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
-
 export async function GET(request: NextRequest) {
   try {
     // Verify authentication
@@ -14,66 +9,122 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Fetch all surveys with their response data
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !supabaseKey) {
+      console.error('Missing Supabase environment variables');
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      );
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Fetch all surveys
     const { data: surveys, error: surveysError } = await supabase
       .from('surveys')
-      .select('id, title_en, title_ar, created_at');
+      .select('id, title_en, title_ar, created_at')
+      .eq('is_archived', false);
 
-    if (surveysError) throw surveysError;
+    if (surveysError) {
+      console.error('Error fetching surveys:', surveysError);
+      throw surveysError;
+    }
 
     // Build reports for each survey
     const reports = await Promise.all(
       (surveys || []).map(async (survey) => {
-        // Get all responses for this survey
-        const { data: responses, error: responsesError } = await supabase
-          .from('responses')
-          .select('*')
-          .eq('survey_id', survey.id);
+        try {
+          // Get all responses for this survey
+          const { data: responses, error: responsesError } = await supabase
+            .from('responses')
+            .select('id, email, gender, age_range, nationality, submitted_at')
+            .eq('survey_id', survey.id);
 
-        if (responsesError) throw responsesError;
+          if (responsesError) {
+            console.error(`Error fetching responses for survey ${survey.id}:`, responsesError);
+            throw responsesError;
+          }
 
-        // Get survey questions to calculate metrics
-        const { data: surveyData, error: surveyError } = await supabase
-          .from('surveys')
-          .select('questions')
-          .eq('id', survey.id)
-          .single();
+          // Get all questions for this survey
+          const { data: questions, error: questionsError } = await supabase
+            .from('questions')
+            .select('id, content_en, content_ar, type')
+            .eq('survey_id', survey.id)
+            .order('order_num', { ascending: true });
 
-        if (surveyError) throw surveyError;
+          if (questionsError) {
+            console.error(`Error fetching questions for survey ${survey.id}:`, questionsError);
+            throw questionsError;
+          }
 
-        const questions = surveyData?.questions || [];
-        const totalResponses = responses?.length || 0;
+          // Get all answers for this survey
+          const { data: answers, error: answersError } = await supabase
+            .from('answers')
+            .select('response_id, question_id, value')
+            .in('response_id', (responses || []).map((r) => r.id));
 
-        // Calculate metrics
-        const totalInvitations = Math.max(totalResponses * 10, 100); // Estimate: assume 10% response rate baseline
-        const responseRate = totalInvitations > 0 ? (totalResponses / totalInvitations) * 100 : 0;
-        const completionRate = calculateCompletionRate(responses || [], questions);
-        const satisfactionRate = calculateSatisfactionRate(responses || []);
-        const answerRate = calculateAnswerRate(responses || [], questions);
+          if (answersError && (responses || []).length > 0) {
+            console.error(`Error fetching answers for survey ${survey.id}:`, answersError);
+            throw answersError;
+          }
 
-        // Get demographics
-        const demographics = calculateDemographics(responses || []);
+          const totalResponses = responses?.length || 0;
 
-        // Get top strengths and improvements (based on question satisfaction)
-        const { topStrengths, bottomImprovements } = getStrengthsAndImprovements(
-          responses || [],
-          questions
-        );
+          // Calculate metrics
+          const totalInvitations = Math.max(totalResponses * 10, 100);
+          const responseRate = totalInvitations > 0 ? (totalResponses / totalInvitations) * 100 : 0;
+          const completionRate = calculateCompletionRate(responses || [], answers || [], questions || []);
+          const satisfactionRate = calculateSatisfactionRate(answers || [], questions || []);
+          const answerRate = calculateAnswerRate(responses || [], answers || [], questions || []);
 
-        return {
-          id: survey.id,
-          title_en: survey.title_en,
-          title_ar: survey.title_ar,
-          totalInvitations,
-          totalResponses,
-          responseRate,
-          completionRate,
-          satisfactionRate,
-          answerRate,
-          topStrengths,
-          bottomImprovements,
-          demographics,
-        };
+          // Get demographics
+          const demographics = calculateDemographics(responses || []);
+
+          // Get top strengths and improvements
+          const { topStrengths, bottomImprovements } = getStrengthsAndImprovements(
+            answers || [],
+            questions || []
+          );
+
+          return {
+            id: survey.id,
+            title_en: survey.title_en,
+            title_ar: survey.title_ar,
+            totalInvitations,
+            totalResponses,
+            responseRate: Math.round(responseRate * 100) / 100,
+            completionRate: Math.round(completionRate * 100) / 100,
+            satisfactionRate: Math.round(satisfactionRate * 100) / 100,
+            answerRate: Math.round(answerRate * 100) / 100,
+            topStrengths,
+            bottomImprovements,
+            demographics,
+          };
+        } catch (surveyError) {
+          console.error(`Error processing survey ${survey.id}:`, surveyError);
+          // Return a report with default values if there's an error
+          return {
+            id: survey.id,
+            title_en: survey.title_en,
+            title_ar: survey.title_ar,
+            totalInvitations: 0,
+            totalResponses: 0,
+            responseRate: 0,
+            completionRate: 0,
+            satisfactionRate: 0,
+            answerRate: 0,
+            topStrengths: ['No data available'],
+            bottomImprovements: ['No data available'],
+            demographics: {
+              gender: {},
+              ageRange: {},
+              nationality: {},
+            },
+          };
+        }
       })
     );
 
@@ -81,23 +132,25 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching reports:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch reports' },
+      { error: 'Failed to fetch reports', details: String(error) },
       { status: 500 }
     );
   }
 }
 
-function calculateCompletionRate(responses: any[], questions: any[]): number {
+function calculateCompletionRate(responses: any[], answers: any[], questions: any[]): number {
   if (responses.length === 0 || questions.length === 0) return 0;
 
   let totalAnswered = 0;
   let totalPossible = 0;
 
   responses.forEach((response) => {
-    const answers = response.answers || {};
     questions.forEach((question: any) => {
       totalPossible++;
-      if (answers[question.id]) {
+      const hasAnswer = answers.some(
+        (a) => a.response_id === response.id && a.question_id === question.id
+      );
+      if (hasAnswer) {
         totalAnswered++;
       }
     });
@@ -106,33 +159,46 @@ function calculateCompletionRate(responses: any[], questions: any[]): number {
   return totalPossible > 0 ? (totalAnswered / totalPossible) * 100 : 0;
 }
 
-function calculateSatisfactionRate(responses: any[]): number {
-  if (responses.length === 0) return 0;
+function calculateSatisfactionRate(answers: any[], questions: any[]): number {
+  if (answers.length === 0) return 0;
 
-  let totalSatisfaction = 0;
+  // Find rating-type questions (star_rating, percentage_range)
+  const ratingQuestions = questions.filter((q: any) =>
+    ['star_rating', 'percentage_range'].includes(q.type)
+  );
+
+  if (ratingQuestions.length === 0) return 0;
+
+  let totalScore = 0;
   let count = 0;
 
-  responses.forEach((response) => {
-    if (response.satisfaction_score !== null && response.satisfaction_score !== undefined) {
-      totalSatisfaction += response.satisfaction_score;
-      count++;
+  answers.forEach((answer) => {
+    const question = ratingQuestions.find((q: any) => q.id === answer.question_id);
+    if (question) {
+      const value = parseFloat(answer.value);
+      if (!isNaN(value)) {
+        totalScore += value;
+        count++;
+      }
     }
   });
 
-  return count > 0 ? (totalSatisfaction / count / 5) * 100 : 0; // Assuming 5-point scale
+  return count > 0 ? (totalScore / count / 5) * 100 : 0; // Normalize to 0-100
 }
 
-function calculateAnswerRate(responses: any[], questions: any[]): number {
+function calculateAnswerRate(responses: any[], answers: any[], questions: any[]): number {
   if (responses.length === 0 || questions.length === 0) return 0;
 
   let answeredQuestions = 0;
   let totalQuestions = 0;
 
   responses.forEach((response) => {
-    const answers = response.answers || {};
     questions.forEach((question: any) => {
       totalQuestions++;
-      if (answers[question.id]) {
+      const hasAnswer = answers.some(
+        (a) => a.response_id === response.id && a.question_id === question.id
+      );
+      if (hasAnswer) {
         answeredQuestions++;
       }
     });
@@ -168,24 +234,22 @@ function calculateDemographics(responses: any[]): any {
   return demographics;
 }
 
-function getStrengthsAndImprovements(responses: any[], questions: any[]): any {
+function getStrengthsAndImprovements(answers: any[], questions: any[]): any {
   const questionScores: Record<string, { total: number; count: number }> = {};
 
   // Calculate average satisfaction for each question
-  responses.forEach((response) => {
-    const answers = response.answers || {};
-    questions.forEach((question: any) => {
-      if (answers[question.id]) {
-        const answer = answers[question.id];
-        const score = typeof answer === 'number' ? answer : 0;
-
-        if (!questionScores[question.id]) {
-          questionScores[question.id] = { total: 0, count: 0 };
+  answers.forEach((answer) => {
+    const question = questions.find((q: any) => q.id === answer.question_id);
+    if (question && ['star_rating', 'percentage_range'].includes(question.type)) {
+      const value = parseFloat(answer.value);
+      if (!isNaN(value)) {
+        if (!questionScores[answer.question_id]) {
+          questionScores[answer.question_id] = { total: 0, count: 0 };
         }
-        questionScores[question.id].total += score;
-        questionScores[question.id].count++;
+        questionScores[answer.question_id].total += value;
+        questionScores[answer.question_id].count++;
       }
-    });
+    }
   });
 
   // Calculate averages and sort
