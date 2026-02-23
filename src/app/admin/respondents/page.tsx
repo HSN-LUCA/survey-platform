@@ -238,32 +238,32 @@ export default function RespondentsPage() {
               <p className="text-gray-600">{t('admin.noRespondentsFound')}</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className={`overflow-x-auto ${isRTL ? 'rtl' : 'ltr'}`}>
               <table className="w-full">
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    <th className={`px-4 md:px-6 py-3 text-sm font-semibold text-gray-700 ${isRTL ? 'text-right' : 'text-left'}`}>
                       {t('admin.respondentEmail')}
                     </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    <th className={`px-4 md:px-6 py-3 text-sm font-semibold text-gray-700 ${isRTL ? 'text-right' : 'text-left'}`}>
                       {t('admin.respondentPhone')}
                     </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    <th className={`px-4 md:px-6 py-3 text-sm font-semibold text-gray-700 ${isRTL ? 'text-right' : 'text-left'}`}>
                       {t('admin.respondentHajjNumber')}
                     </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    <th className={`px-4 md:px-6 py-3 text-sm font-semibold text-gray-700 ${isRTL ? 'text-right' : 'text-left'}`}>
                       {t('admin.respondentGender')}
                     </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    <th className={`px-4 md:px-6 py-3 text-sm font-semibold text-gray-700 ${isRTL ? 'text-right' : 'text-left'}`}>
                       {t('admin.respondentAgeRange')}
                     </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    <th className={`px-4 md:px-6 py-3 text-sm font-semibold text-gray-700 ${isRTL ? 'text-right' : 'text-left'}`}>
                       {t('admin.respondentSurvey')}
                     </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    <th className={`px-4 md:px-6 py-3 text-sm font-semibold text-gray-700 ${isRTL ? 'text-right' : 'text-left'}`}>
                       {t('admin.respondentDate')}
                     </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    <th className={`px-4 md:px-6 py-3 text-sm font-semibold text-gray-700 ${isRTL ? 'text-right' : 'text-left'}`}>
                       {t('common.action')}
                     </th>
                   </tr>
@@ -271,18 +271,27 @@ export default function RespondentsPage() {
                 <tbody className="divide-y divide-gray-200">
                   {filteredRespondents.map((respondent) => (
                     <tr key={respondent.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 text-sm text-gray-900">{respondent.email}</td>
-                      <td className="px-6 py-4 text-sm text-gray-600">{respondent.phone}</td>
-                      <td className="px-6 py-4 text-sm text-gray-600">{respondent.hajj_number}</td>
-                      <td className="px-6 py-4 text-sm text-gray-600">{respondent.gender}</td>
-                      <td className="px-6 py-4 text-sm">
+                      <td className={`px-4 md:px-6 py-4 text-sm text-gray-900 ${isRTL ? 'text-right' : 'text-left'}`}>{respondent.email}</td>
+                      <td className={`px-4 md:px-6 py-4 text-sm text-gray-600 ${isRTL ? 'text-right' : 'text-left'}`}>{respondent.phone}</td>
+                      <td className={`px-4 md:px-6 py-4 text-sm text-gray-600 ${isRTL ? 'text-right' : 'text-left'}`}>{respondent.hajj_number}</td>
+                      <td className={`px-4 md:px-6 py-4 text-sm text-gray-600 ${isRTL ? 'text-right' : 'text-left'}`}>{respondent.gender}</td>
+                      <td className={`px-4 md:px-6 py-4 text-sm ${isRTL ? 'text-right' : 'text-left'}`}>
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                           {respondent.age_range}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">{respondent.survey_title}</td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
+                      <td className={`px-4 md:px-6 py-4 text-sm text-gray-600 ${isRTL ? 'text-right' : 'text-left'}`}>{respondent.survey_title}</td>
+                      <td className={`px-4 md:px-6 py-4 text-sm text-gray-600 ${isRTL ? 'text-right' : 'text-left'}`}>
                         {new Date(respondent.submitted_at).toLocaleDateString()}
+                      </td>
+                      <td className={`px-4 md:px-6 py-4 text-sm ${isRTL ? 'text-right' : 'text-left'}`}>
+                        <button
+                          onClick={() => deleteRespondent(respondent.id)}
+                          disabled={deletingId === respondent.id}
+                          className="text-red-600 hover:text-red-800 disabled:opacity-50"
+                        >
+                          {deletingId === respondent.id ? '...' : t('admin.deleteRespondent')}
+                        </button>
                       </td>
                     </tr>
                   ))}
